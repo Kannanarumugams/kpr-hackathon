@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect - Farmer to Wholesale Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5f2d, #97bc62);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 1rem;
+            background: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            margin-top: 2rem;
+            padding: 1rem;
+            width: 100%;
+            max-width: 500px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+
+        .products-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .farmer-name {
+            color: #2c5f2d;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .farmer-location {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .product-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .bid-btn {
+            background: #2c5f2d;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .bid-btn:hover {
+            background: #1e401f;
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">AgriConnect</div>
+            <div>
+                <button class="bid-btn" style="padding: 0.5rem 1rem;">Login/Signup</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Connecting Farmers Directly to Wholesale Buyers</h1>
+            <input type="text" class="search-bar" placeholder="Search for crops, vegetables, or fruits...">
+        </div>
+    </div>
+
+    <div class="products-container">
+        <h2>Available Listings Near You</h2>
+        <div class="product-grid" id="productGrid">
+            <!-- Product cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Sample data - In real implementation, this would come from an API
+        const farmers = [
+            {
+                name: "Raju Farms",
+                location: "Chennai, TN",
+                distance: "15 km",
+                products: ["Tomatoes", "Onions", "Potatoes"],
+                quantity: "500 kg"
+            },
+            {
+                name: "Shiva Reddy Farms",
+                location: "Bengaluru, KA",
+                distance: "8 km",
+                products: ["Carrots", "Beans", "Cabbage"],
+                quantity: "300 kg"
+            },
+            {
+                name: "Mohan Organic Farms",
+                location: "Hyderabad, TL",
+                distance: "25 km",
+                products: ["Organic Spinach", "Kale", "Broccoli"],
+                quantity: "200 kg"
+            }
+        ];
+
+        // Function to create product cards
+        function createProductCards() {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = '';
+
+            farmers.forEach((farmer, index) => {
+                const card = document.createElement('div');
+                card.className = 'product-card fade-in';
+                card.innerHTML = `
+                    <h3 class="farmer-name">${farmer.name}</h3>
+                    <div class="farmer-location">
+                        <div>${farmer.location}</div>
+                        <div>${farmer.distance} away</div>
+                    </div>
+                    <ul class="product-list">
+                        ${farmer.products.map(product => `<li>${product}</li>`).join('')}
+                    </ul>
+                    <div style="margin: 1rem 0;">Available: ${farmer.quantity}</div>
+                    <button class="bid-btn" onclick="handleBid(${index})">Place Bid</button>
+                `;
+                productGrid.appendChild(card);
+            });
+        }
+
+        // Function to handle bid button click
+        function handleBid(farmerIndex) {
+            // In real implementation, this would redirect to a bid page with farmer details
+            window.location.href = `bidding wholesaler.html?farmer=${encodeURIComponent(farmers[farmerIndex].name)}`;
+        }
+
+        // Search functionality
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // Implement search filter logic here
+        });
+
+        // Initialize product cards on page load
+        window.addEventListener('DOMContentLoaded', createProductCards);
+
+        // Add simple animation on scroll
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                if (cardTop < window.innerHeight) {
+                    card.style.opacity = '1';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

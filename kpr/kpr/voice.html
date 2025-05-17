@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFarm AI Assistant</title>
+    <style>
+        :root {
+            --primary: #26e72f;
+            --secondary: #7CB342;
+            --dark: #15df22;
+            --light: #DCEDC8;
+            --text: #212121;
+            --background: #f5f5f5;
+            --error: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgb(255, 255, 255);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .lang-switcher {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 15px;
+            background: var(--light);
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            animation: fadeIn 0.3s;
+            line-height: 1.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .assistant-message {
+            align-self: flex-start;
+            background-color: var(--light);
+            color: var(--text);
+        }
+        
+        .error-message {
+            align-self: flex-start;
+            background-color: #FFEBEE;
+            color: var(--error);
+            border: 1px solid #FFCDD2;
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        #userInput {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+        }
+        
+        #voiceBtn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        #voiceBtn.listening {
+            background: var(--dark);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .typing {
+            display: flex;
+            gap: 5px;
+            padding: 10px 15px;
+            background: var(--light);
+            border-radius: 18px;
+            align-self: flex-start;
+            width: fit-content;
+        }
+        
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: var(--dark);
+            border-radius: 50%;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+        
+        .typing span:nth-child(1) { animation-delay: 0s; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .status {
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 5px;
+            color: #666;
+        }
+        
+        .tts-warning {
+            color: var(--error);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 5px;
+            display: none;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="lang-switcher">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="ta">TA</button>
+        </div>
+        <div class="header">
+            <h1 id="headerTitle">SmartFarm AI Assistant</h1>
+            <p id="headerSub">Your agricultural intelligence partner</p>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="assistant-message" id="welcomeMsg">
+                Hello farmer! I'm your SmartFarm AI assistant. I can analyze your field conditions, identify plant health issues, and provide detailed recommendations. How can I help you today?
+            </div>
+        </div>
+        
+        <div class="status" id="status">Ready</div>
+        <div class="tts-warning" id="ttsWarning"></div>
+        
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ask about your fields or crops...">
+            <button id="voiceBtn">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    </div>
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const GEMINI_API_KEY = "AIzaSyDgqAoyLWk6Du7xTgXzghX2TtcE4N646Nk";
+        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+        
+        let currentLang = 'en';
+        const translations = {
+            en: {
+                welcome: "Hello farmer! I'm your SmartFarm AI assistant. I can analyze your field conditions, identify plant health issues, and provide detailed recommendations. How can I help you today?",
+                placeholder: "Ask about your fields or crops...",
+                statusReady: "Ready",
+                statusListening: "Listening...",
+                statusAnalyzing: "Analyzing...",
+                headerTitle: "SmartFarm AI Assistant",
+                headerSub: "Your agricultural intelligence partner",
+                plants: {
+                    tomato: "Tomato",
+                    wheat: "Wheat",
+                    rice: "Rice",
+                    corn: "Corn",
+                    potato: "Potato"
+                },
+                diseases: {
+                    early_blight: "Early Blight",
+                    late_blight: "Late Blight",
+                    rust: "Rust",
+                    powdery_mildew: "Powdery Mildew",
+                    bacterial_spot: "Bacterial Spot"
+                },
+                errorMessage: "An error occurred. Please try again.",
+                ttsWarning: "Speech not available - enable Tamil TTS in your OS settings",
+                noFieldData: "No data available for this field.",
+                fieldConditions: "Field Conditions",
+                plantHealth: "Plant Health",
+                recommendations: "Recommendations",
+                sensorReadings: "Sensor Readings"
+            },
+            ta: {
+                welcome: "வணக்கம்! நான் உங்கள் ஸ்மார்ட்ஃபார்ம் செயற்கை உதவியாளர். உங்கள் வயல் நிலைகளை ஆய்வு செய்து, செடி ஆரோக்கிய பிரச்சினைகளை கண்டறிந்து, பரிந்துரைகள் வழங்க முடியும். இன்று எப்படி உதவலாம்?",
+                placeholder: "உங்கள் வயல் அல்லது பயிர்களைப் பற்றி கேளுங்கள்...",
+                statusReady: "தயார்",
+                statusListening: "கேட்கிறது...",
+                statusAnalyzing: "பகுப்பாய்வு செய்கிறது...",
+                headerTitle: "ஸ்மார்ட்ஃபார்ம் AI உதவியாளர்",
+                headerSub: "உங்கள் வேளாண் அறிவுத் துணை",
+                plants: {
+                    tomato: "தக்காளி",
+                    wheat: "கோதுமை",
+                    rice: "நெல்",
+                    corn: "சோளம்",
+                    potato: "உருளைக்கிழங்கு"
+                },
+                diseases: {
+                    early_blight: "ஆர்லி ப்ளைட்",
+                    late_blight: "லேட் ப்ளைட்",
+                    rust: "துரு",
+                    powdery_mildew: "பவுடர் மில்டியூ",
+                    bacterial_spot: "பாக்டீரியா புள்ளி"
+                },
+                errorMessage: "பிழை ஏற்பட்டுள்ளது. மீண்டும் முயற்சிக்கவும்.",
+                ttsWarning: "பேச்சு கிடைக்கவில்லை - உங்கள் OS அமைப்புகளில் தமிழ் TTS ஐ இயக்கவும்",
+                noFieldData: "இந்த வயலுக்கு தரவு இல்லை.",
+                fieldConditions: "வயல் நிலைமைகள்",
+                plantHealth: "செடி ஆரோக்கியம்",
+                recommendations: "பரிந்துரைகள்",
+                sensorReadings: "சென்சர் அளவீடுகள்"
+            }
+        };
+
+        // Initialize ResponsiveVoice
+        responsiveVoice.setDefaultVoice("Tamil Female");
+        responsiveVoice.enableWindowClickHook();
+
+        // Language switcher
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.dataset.lang;
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                updateUI();
+                
+                // Update speech recognition language
+                if (recognition) {
+                    recognition.lang = currentLang === 'en' ? 'en-US' : 'ta-IN';
+                }
+            });
+        });
+
+        function updateUI() {
+            document.getElementById('welcomeMsg').textContent = translations[currentLang].welcome;
+            document.getElementById('userInput').placeholder = translations[currentLang].placeholder;
+            document.getElementById('headerTitle').textContent = translations[currentLang].headerTitle;
+            document.getElementById('headerSub').textContent = translations[currentLang].headerSub;
+            document.getElementById('status').textContent = translations[currentLang].statusReady;
+            document.getElementById('ttsWarning').textContent = translations[currentLang].ttsWarning;
+        }
+
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const status = document.getElementById('status');
+        const ttsWarning = document.getElementById('ttsWarning');
+        const synth = window.speechSynthesis;
+        
+        let fieldData = {};
+
+        // Function to receive and process farm data from localStorage
+        function receiveFarmData() {
+            const farmData = JSON.parse(localStorage.getItem('farmDataTemp'));
+
+            if (farmData) {
+                console.log('📥 Farm data received:', farmData);
+
+                const fieldKey = `field${farmData.field || "1"}`;
+                const plantKey = farmData.plant?.toLowerCase?.();
+                const diseaseKey = farmData.disease?.toLowerCase?.();
+
+                const translatedPlant = translations[currentLang]?.plants?.[plantKey] || farmData.plant || "Unknown";
+                const translatedDisease = translations[currentLang]?.diseases?.[diseaseKey] || farmData.disease || "";
+
+                fieldData[fieldKey] = {
+                    plant: translatedPlant,
+                    disease: translatedDisease,
+                    soil: {
+                        N: farmData.soil?.nitrogen ?? 0,
+                        P: farmData.soil?.phosphorus ?? 0,
+                        K: farmData.soil?.potassium ?? 0,
+                        pH: farmData.soil?.ph ?? 0,
+                        moisture: farmData.soil?.moisture ?? 0,
+                        temperature: farmData.weather?.temperature ?? 0,
+                        humidity: farmData.weather?.humidity ?? 0
+                    },
+                    last_fertilized: farmData.last_fertilized || "Unknown",
+                    last_harvest: farmData.last_harvest || "Unknown"
+                };
+
+                console.log(`✅ ${fieldKey} updated:`, fieldData[fieldKey]);
+            } else {
+                console.warn('⚠️ No farmData found in localStorage');
+                fieldData = {};
+            }
+        }
+
+        // Call receiveFarmData on page load
+        receiveFarmData();
+
+        // Speech Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = currentLang === 'en' ? 'en-US' : 'ta-IN';
+            
+            recognition.onstart = () => {
+                voiceBtn.classList.add('listening');
+                status.textContent = translations[currentLang].statusListening;
+            };
+            
+            recognition.onend = () => {
+                voiceBtn.classList.remove('listening');
+                status.textContent = translations[currentLang].statusReady;
+            };
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                processQuestion(transcript);
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                addMessage(translations[currentLang].errorMessage, 'error');
+                status.textContent = translations[currentLang].statusReady;
+            };
+        } else {
+            voiceBtn.style.display = 'none';
+        }
+
+        // Event Listeners
+        voiceBtn.addEventListener('click', () => {
+            if (!SpeechRecognition) {
+                addMessage(translations[currentLang].errorMessage, 'error');
+                return;
+            }
+            
+            if (voiceBtn.classList.contains('listening')) {
+                recognition.stop();
+            } else {
+                recognition.lang = currentLang === 'en' ? 'en-US' : 'ta-IN';
+                recognition.start();
+            }
+        });
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && userInput.value.trim()) {
+                processQuestion(userInput.value.trim());
+                userInput.value = '';
+            }
+        });
+
+        // Chat Functions
+        function addMessage(text, sender = 'assistant') {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', `${sender}-message`);
+            
+            // Clean and format the text
+            let cleanText = (text || translations[currentLang].errorMessage)
+                .replace(/\*\*/g, '')  // Remove bold markers
+                .replace(/\*/g, '')    // Remove all asterisks
+                .replace(/- /g, '• ')  // Convert dashes to bullets
+                .replace(/\n/g, '<br>'); // Convert newlines to HTML
+            
+            // Preserve any HTML formatting we want to keep
+            cleanText = cleanText.replace(/<strong>(.*?)<\/strong>/g, '<strong>$1</strong>');
+            
+            messageDiv.innerHTML = cleanText;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            if (sender === 'assistant' && typeof cleanText === 'string') {
+                // Remove HTML tags before speaking
+                const textToSpeak = cleanText.replace(/<[^>]*>/g, '');
+                speakResponse(textToSpeak);
+            }
+        }
+
+        function showTyping() {
+            status.textContent = translations[currentLang].statusAnalyzing;
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing';
+            typingDiv.innerHTML = `<span></span><span></span><span></span>`;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTyping() {
+            status.textContent = translations[currentLang].statusReady;
+            const typing = document.querySelector('.typing');
+            if (typing) typing.remove();
+        }
+
+        // Gemini AI Integration
+        async function getAIResponse(prompt) {
+            try {
+                const response = await fetch(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }],
+                        generationConfig: {
+                            maxOutputTokens: 1000
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                    return data.candidates[0].content.parts[0].text;
+                } else {
+                    console.error('Unexpected API response structure:', data);
+                    throw new Error('Unexpected API response structure');
+                }
+            } catch (error) {
+                console.error('Gemini API Error:', error);
+                return translations[currentLang].errorMessage;
+            }
+        }
+
+        async function processQuestion(question) {
+            if (!question.trim()) return;
+            
+            addMessage(question, 'user');
+            showTyping();
+
+            try {
+                const context = getContext(question);
+                
+                // Check if specific field was requested but has no data
+                if (context.field && (!fieldData[context.field] || Object.keys(fieldData[context.field]).length === 0)) {
+                    hideTyping();
+                    addMessage(translations[currentLang].noFieldData);
+                    return;
+                }
+                
+                const prompt = createPrompt(context, question);
+                const response = await getAIResponse(prompt);
+                hideTyping();
+                
+                if (typeof response === 'string' && response.length > 0) {
+                    let formattedResponse = formatResponse(response, currentLang);
+                    addMessage(formattedResponse);
+                } else {
+                    throw new Error('Empty response from API');
+                }
+            } catch (error) {
+                console.error('Processing error:', error);
+                hideTyping();
+                addMessage(translations[currentLang].errorMessage, 'error');
+            }
+        }
+
+        // Function to format the response for better readability
+        function formatResponse(response, lang) {
+            let formatted = response;
+            
+            // Remove markdown formatting
+            formatted = formatted.replace(/\*\*/g, '');
+            formatted = formatted.replace(/\*/g, '');
+            
+            // Format lists
+            formatted = formatted.replace(/\d+\./g, '•');
+            formatted = formatted.replace(/•(\S)/g, '• $1');
+            
+            // Add HTML formatting for better display
+            if (lang === 'en') {
+                // Add section headers for English
+                formatted = formatted.replace(/Field Conditions:/g, '<strong>Field Conditions:</strong>');
+                formatted = formatted.replace(/Plant Health:/g, '<strong>Plant Health:</strong>');
+                formatted = formatted.replace(/Recommendations:/g, '<strong>Recommendations:</strong>');
+            } else {
+                // Add section headers for Tamil
+                formatted = formatted.replace(/வயல் நிலைமைகள்:/g, '<strong>வயல் நிலைமைகள்:</strong>');
+                formatted = formatted.replace(/செடி ஆரோக்கியம்:/g, '<strong>செடி ஆரோக்கியம்:</strong>');
+                formatted = formatted.replace(/பரிந்துரைகள்:/g, '<strong>பரிந்துரைகள்:</strong>');
+            }
+            
+            // Convert line breaks to HTML
+            formatted = formatted.replace(/\n/g, '<br>');
+            
+            return formatted;
+        }
+
+        function getContext(question) {
+            const lowerQuestion = question.toLowerCase();
+            let fieldId = null;
+            
+            // Improved field detection with regex
+            const fieldRegex = currentLang === 'en' ? 
+                /(field|plot|area)\s*(\d+)/i : 
+                /(வயல்|பகுதி|பூமி)\s*(\d+)/i;
+            
+            const fieldMatch = lowerQuestion.match(fieldRegex);
+            if (fieldMatch) {
+                fieldId = `field${fieldMatch[2]}`;
+                
+                // Verify field exists and has data
+                if (!fieldData[fieldId] || Object.keys(fieldData[fieldId]).length === 0) {
+                    fieldId = null;
+                }
+            }
+            
+            return {
+                data: fieldId ? { [fieldId]: fieldData[fieldId] } : fieldData,
+                field: fieldId,
+                plant: getPlantType(lowerQuestion)
+            };
+        }
+
+        function getPlantType(question) {
+            const plants = translations[currentLang].plants;
+            for (const [key, value] of Object.entries(plants)) {
+                if (question.includes(value.toLowerCase())) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        function createPrompt(context, question) {
+            const fieldInfo = context.field ? 
+                generateFieldReport(context.field, context.data[context.field]) : 
+                generateAllFieldsReport(context.data);
+            
+            const systemPrompt = currentLang === 'en' ? 
+                `You are an agricultural expert helping farmers with their crops. Provide detailed analysis (under 200 words) in English. 
+                ${fieldInfo}
+                Focus your analysis on:
+                1. Current soil and climate conditions
+                2. Plant health assessment
+                3. Nutrient levels analysis
+                4. Specific recommendations
+                5. Any urgent actions needed
+                Use simple language suitable for farmers. Format with clear paragraphs but no markdown.` :
+                `நீங்கள் ஒரு வேளாண் நிபுணர். விவசாயிகளுக்கு அவர்களின் பயிர்களுக்கு உதவுங்கள். தமிழில் விரிவான பகுப்பாய்வை வழங்கவும் (200 வார்த்தைகளுக்குள்).
+                ${fieldInfo}
+                உங்கள் பகுப்பாய்வில் கவனம் செலுத்துங்கள்:
+                1. தற்போதைய மண் மற்றும் காலநிலை நிலைமைகள்
+                2. பயிர் ஆரோக்கிய மதிப்பீடு
+                3. ஊட்டச்சத்து நிலைகள் பகுப்பாய்வு
+                4. குறிப்பிட்ட பரிந்துரைகள்
+                5. அவசரமாக தேவையான எந்த நடவடிக்கைகளும்
+                விவசாயிகளுக்கு ஏற்ற எளிய மொழியைப் பயன்படுத்தவும். தெளிவான பத்திகளுடன் வடிவமைக்கவும்.`;
+
+            return `${systemPrompt}\n\nFarmer's Question: "${question}"`;
+        }
+
+        function generateFieldReport(fieldId, field) {
+            return currentLang === 'en' ?
+                `\nANALYZING SPECIFICALLY FOR ${fieldId.toUpperCase()}:\n` + 
+                `Crop: ${field.plant || 'Unknown'}\n` +
+                `Disease: ${field.disease || 'None detected'}\n` +
+                `Soil N-P-K: ${field.soil.N}-${field.soil.P}-${field.soil.K} (ppm)\n` +
+                `Soil pH: ${field.soil.pH}\n` +
+                `Moisture: ${field.soil.moisture}%\n` +
+                `Temperature: ${field.soil.temperature}°C\n` +
+                `Humidity: ${field.soil.humidity}%\n` +
+                `Last Fertilized: ${field.last_fertilized || 'Unknown'}\n` +
+                `Last Harvest: ${field.last_harvest || 'Unknown'}\n` :
+                `\nகுறிப்பாக பகுப்பாய்வு செய்கிறது ${fieldId.toUpperCase()}:\n` + 
+                `பயிர்: ${field.plant || 'தெரியவில்லை'}\n` +
+                `நோய்: ${field.disease || 'கண்டறியப்படவில்லை'}\n` +
+                `மண் N-P-K: ${field.soil.N}-${field.soil.P}-${field.soil.K} (ppm)\n` +
+                `மண் pH: ${field.soil.pH}\n` +
+                `ஈரப்பதம்: ${field.soil.moisture}%\n` +
+                `வெப்பநிலை: ${field.soil.temperature}°C\n` +
+                `ஈரப்பதம்: ${field.soil.humidity}%\n` +
+                `கடைசியாக உரமிடப்பட்டது: ${field.last_fertilized || 'தெரியவில்லை'}\n` +
+                `கடைசி அறுவடை: ${field.last_harvest || 'தெரியவில்லை'}\n`;
+        }
+
+        function generateAllFieldsReport(fields) {
+            let report = currentLang === 'en' ? 
+                "Analyzing all available field data:\n" : 
+                "அனைத்து கிடைக்கும் வயல் தரவுகளையும் பகுப்பாய்வு செய்கிறது:\n";
+            
+            for (const [fieldId, field] of Object.entries(fields)) {
+                report += generateFieldReport(fieldId, field);
+            }
+            
+            return report;
+        }
+
+        // Enhanced Speech Synthesis
+        function speakResponse(text) {
+            if (typeof text !== 'string' || text.length === 0) return;
+            
+            if (synth.speaking) {
+                synth.cancel();
+                setTimeout(() => actuallySpeak(text), 100);
+            } else {
+                actuallySpeak(text);
+            }
+        }
+
+        function actuallySpeak(text) {
+            if (currentLang === 'ta') {
+                tryGoogleTTS(text).catch(() => {
+                    tryResponsiveVoice(text).catch(() => {
+                        tryBrowserTTS(text).catch(() => {
+                            console.error('All Tamil TTS methods failed');
+                            showTtsWarning();
+                        });
+                    });
+                });
+            } else {
+                tryBrowserTTS(text);
+            }
+        }
+
+        function showTtsWarning() {
+            ttsWarning.style.display = 'block';
+            setTimeout(() => {
+                ttsWarning.style.display = 'none';
+            }, 5000);
+        }
+
+        function tryGoogleTTS(text) {
+            return new Promise((resolve, reject) => {
+                if (!text.trim()) {
+                    reject('Empty text');
+                    return;
+                }
+                
+                const audio = new Audio();
+                audio.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ta&q=${encodeURIComponent(text)}`;
+                
+                audio.onerror = () => reject('Google TTS failed');
+                audio.onended = () => resolve();
+                audio.play().catch(e => {
+                    console.error('Google TTS play failed:', e);
+                    reject(e);
+                });
+            });
+        }
+
+        function tryResponsiveVoice(text) {
+            return new Promise((resolve, reject) => {
+                if (typeof responsiveVoice === 'undefined') {
+                    reject('ResponsiveVoice not loaded');
+                    return;
+                }
+                
+                responsiveVoice.speak(text, "Tamil Female", {
+                    onend: resolve,
+                    onerror: reject,
+                    rate: 0.9
+                });
+            });
+        }
+
+        function tryBrowserTTS(text) {
+            return new Promise((resolve, reject) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = currentLang === 'en' ? 'en-US' : 'ta-IN';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                
+                utterance.onend = resolve;
+                utterance.onerror = reject;
+                
+                const voices = synth.getVoices();
+                if (voices.length > 0) {
+                    if (currentLang === 'ta') {
+                        const tamilVoice = voices.find(v => 
+                            v.lang.includes('ta') || 
+                            v.name.includes('Tamil') || 
+                            v.voiceURI.includes('Tamil')
+                        );
+                        if (tamilVoice) utterance.voice = tamilVoice;
+                    } else {
+                        const englishVoice = voices.find(v => 
+                            v.lang.includes('en') || 
+                            v.name.includes('English')
+                        );
+                        if (englishVoice) utterance.voice = englishVoice;
+                    }
+                }
+                
+                synth.speak(utterance);
+            });
+        }
+
+        // Initialize audio context
+        function initAudio() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = ctx.createOscillator();
+                oscillator.connect(ctx.destination);
+                oscillator.start(0);
+                oscillator.stop(0);
+            } catch (e) {
+                console.log('Audio initialization failed:', e);
+            }
+        }
+
+        // Initialize on first interaction
+        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener('keypress', initAudio, { once: true });
+
+        // Load voices
+        if (synth) {
+            synth.onvoiceschanged = function() {
+                console.log('Voices loaded:', synth.getVoices());
+            };
+        }
+    });
+</script>
+</body>
+</html>

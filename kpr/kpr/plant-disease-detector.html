@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detector - Seed to Circuit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-green: #2C5C2F;
+            --secondary-green: #3A7D44;
+            --accent-yellow: #FFD700;
+            --text-dark: #333333;
+            --text-light: #FFFFFF;
+            --background-light: #F9FBF8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-green);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--text-light);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        .chatbot-btn {
+            background: var(--accent-yellow);
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .chatbot-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .main-content h1 {
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .option-card {
+            background: var(--text-light);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            animation: slideUp 0.5s ease-out;
+            text-align: center;
+            width: 300px;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .option-card h2 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+        }
+
+        .option-card p {
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-green);
+            color: var(--text-light);
+            padding: 2rem;
+            margin-top: 4rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin: 0.5rem 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .main-content h1 {
+                font-size: 2rem;
+            }
+
+            .options-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .option-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">SEED TO CIRCUIT</a>
+            <div class="nav-links">
+                <a href="help.html" class="nav-link">Help</a>
+                <a href="community.html" class="nav-link">Community</a>
+                <button class="chatbot-btn" id="chatbotBtn">AgriChat</button>
+                <a href="order-product.html" class="nav-link">Orders</a>
+            </div>
+        </nav>
+    </header>
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1>Plant Disease Detector</h1>
+        <div class="options-grid">
+            <!-- Manual Upload -->
+            <div class="option-card" onclick="window.location.href='manual-analysis.html'">
+                <h2>Manual Upload</h2>
+                <p>Upload images for detailed disease analysis.</p>
+            </div>
+
+            <!-- Automatic via Camera -->
+            <div class="option-card" onclick="window.location.href='automatic-analysis.html'">
+                <h2>Automatic via Camera</h2>
+                <p>Detect plant diseases in real-time using your camera.</p>
+            </div>
+
+            <!-- New NPK +AI Adviser Card -->
+            <div class="option-card" onclick="window.location.href='http://localhost/area-alert/ai.html'">
+                <h2>NPK +AI ADVISER</h2>
+                <p>Get AI-powered fertilizer recommendations based on soil analysis.</p>
+            </div>
+        </div>
+    </main>
+
+   <!-- Footer -->
+   <footer class="footer">
+    <div class="footer-content">
+        <p>Contact: ks123858@gmail.com | Phone: +91 86810 20239</p>
+        <p>© 2025 Seed to Circuit. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script>
+    // Chatbot functionality
+    const chatbotBtn = document.getElementById('chatbotBtn');
+    chatbotBtn.addEventListener('click', () => {
+        // Open the chatbot popup
+        const chatbotEmbed = document.querySelector('zapier-interfaces-chatbot-embed');
+        chatbotEmbed.setAttribute('is-popup', 'true');
+        chatbotEmbed.style.display = 'block';
+
+        // Alternatively, redirect to the chatbot link
+        window.open('https://seed-to-circuitassistant.zapier.app/', '_blank');
+    });
+</script>
+
+    <style>
+        /* Modified CSS section */
+        .option-card {
+            background: var(--text-light);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            cursor: pointer;
+            animation: slideUp 0.5s ease-out;
+            text-align: center;
+            width: 300px;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background-color: var(--accent-yellow);
+        }
+
+       
+        
+        @media (max-width: 768px) {
+            .options-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .options-grid {
+                flex-wrap: wrap;
+            }
+            .option-card {
+                width: calc(50% - 1rem);
+            }
+        }
+    </style>
+</body>
+</html>

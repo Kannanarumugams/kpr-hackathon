@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Analysis - Seed to Circuit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2C5C2F;
+            --secondary-color: #1A3C27;
+            --accent-color: #5A8F5E;
+            --text-dark: #333333;
+            --text-light: #ffffff;
+            --background-light: #f9fbf8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .company-name {
+            color: var(--text-light);
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .nav-button {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .analysis-container {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #imagePreview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+
+        .result-card {
+            background: white;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.8rem;
+            }
+            
+            .company-name {
+                font-size: 1rem;
+            }
+            
+            .analysis-container {
+                margin-top: 50px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="nav-button">← Back</a>
+        <div class="company-name">Image Analysis</div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="analysis-container">
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+        <label for="imageUpload" class="btn btn-primary">
+            Choose Image
+        </label>
+        <img id="imagePreview">
+        <button class="btn btn-primary" onclick="analyzeImage()" id="analyzeBtn">
+            Analyze Image
+        </button>
+        <div class="result-card" id="upload-results">
+            <h3>Analysis Results</h3>
+            <div id="upload-results-content"></div>
+        </div>
+    </div>
+
+    <!-- TensorFlow.js and Teachable Machine Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+    <script>
+        const MODEL_URL = "https://teachablemachine.withgoogle.com/models/CdIbiIKxy/";
+        let model, maxPredictions;
+
+        // Initialize Model
+        async function initializeModel() {
+            model = await tmImage.load(MODEL_URL + 'model.json', MODEL_URL + 'metadata.json');
+            maxPredictions = model.getTotalClasses();
+        }
+
+        // Image Upload Functions
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById('imagePreview').src = reader.result;
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('analyzeBtn').style.display = 'block';
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        async function analyzeImage() {
+            const image = document.getElementById('imagePreview');
+            const predictions = await model.predict(image);
+            const highest = predictions.reduce((a, b) => a.probability > b.probability ? a : b);
+            document.getElementById('upload-results-content').innerHTML = `
+                <p>${formatName(highest.className)}: ${(highest.probability * 100).toFixed(1)}%</p>
+            `;
+        }
+
+        // Helper Function
+        function formatName(className) {
+            return className.replace(/_/g, ' ')
+                           .replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+        }
+
+        // Initialize on load
+        window.onload = initializeModel;
+    </script>
+</body>
+</html>

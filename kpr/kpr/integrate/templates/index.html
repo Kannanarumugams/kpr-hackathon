@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm2Wholesale | Agri Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #38A169;
+            --secondary-green: #48BB78;
+            --accent-orange: #ED8936;
+            --background: #F7FAFC;
+            --text-dark: #2D3748;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green), #2F855A);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .hero {
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(rgba(56, 161, 105, 0.1), transparent);
+        }
+
+        .hero-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .search-container {
+            max-width: 700px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 3rem;
+            border: 2px solid var(--primary-green);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-green);
+        }
+
+        .categories {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .category-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+            width: 200px;
+            transition: all 0.3s ease;
+            border: 1px solid #E2E8F0;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .product-grid {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .product-image {
+            height: 220px;
+            background: #F0F4F8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-details {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .product-price {
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .product-location {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .product-rating {
+            color: var(--accent-orange);
+            font-size: 0.9rem;
+        }
+
+        .contact-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-green);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .contact-btn:hover {
+            background: #2F855A;
+        }
+
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 4rem 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .category-card {
+                width: 100%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                Farm2Wholesale
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#products">Products</a>
+                <a href="#farmers">Farmers</a>
+                <a href="#wholesalers">Wholesalers</a>
+                <a href="#about">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content animate-fade-in">
+            <h1>Connecting Farms to Markets Seamlessly</h1>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search crops, livestock, or suppliers...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories">
+        <div class="category-card animate-fade-in">
+            <h3>Fresh Produce</h3>
+            <p>Fruits, Vegetables, Herbs</p>
+        </div>
+        <div class="category-card animate-fade-in">
+            <h3>Grains & Pulses</h3>
+            <p>Wheat, Rice, Lentils</p>
+        </div>
+        <div class="category-card animate-fade-in">
+            <h3>Dairy & Eggs</h3>
+            <p>Milk, Cheese, Poultry</p>
+        </div>
+    </section>
+
+    <main class="product-grid">
+        <!-- Dynamically generate product cards -->
+        {% for product in products %}
+        <div class="product-card animate-fade-in">
+            <div class="product-image">
+                <!-- Add product image if available -->
+            </div>
+            <div class="product-details">
+                <h3 class="product-title">{{ product.product_name }}</h3>
+                <div class="product-price">₹{{ product.amount }}/Quintal</div>
+                <div class="product-meta">
+                    <span class="product-location">
+                        <i class="fas fa-map-marker-alt"></i> Location
+                    </span>
+                    <span class="product-stock">
+                        Stock: {{ product.stoks }}
+                    </span>
+                </div>
+                <button class="contact-btn" onclick="placeOrder('{{ product.product_name }}', {{ product.amount }}, 'Pending')">
+                    <i class="fas fa-phone-alt"></i> Order
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+
+    <footer class="footer">
+        <!-- Footer content -->
+    </footer>
+
+    <script>
+        function placeOrder(productName, amount, status) {
+            // Create an order object
+            const order = {
+                product_name: productName, // Use product name instead of order ID
+                customer_name: "Kannan", // Dummy customer name
+                amount: amount,
+                status: status,
+            };
+
+            // Retrieve existing orders from local storage
+            let orders = JSON.parse(localStorage.getItem("recentOrders")) || [];
+
+            // Add the new order to the list
+            orders.push(order);
+
+            // Save the updated orders back to local storage
+            localStorage.setItem("recentOrders", JSON.stringify(orders));
+
+            alert("Order placed successfully!");
+        }
+    </script>
+</body>
+</html>

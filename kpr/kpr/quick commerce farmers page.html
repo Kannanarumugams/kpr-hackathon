@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insta Grocery Link - Farmer Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00C853;
+            --secondary: #009624;
+            --accent: #FFD600;
+            --background: #f8fff5;
+            --text: #2E3D49;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .floating-bg {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%2300C85322" d="M45,-71.3C56.6,-61.6,62.3,-45.6,68.7,-30.3C75.1,-15,82.3,-0.4,79.6,11.7C76.8,23.8,64.1,33.4,53.5,45.8C42.9,58.2,34.4,73.5,22.5,79.9C10.6,86.3,-4.7,83.8,-18.5,77.7C-32.3,71.6,-44.6,61.9,-56.7,51.4C-68.7,40.9,-80.5,29.6,-83.4,16.3C-86.4,3,-80.5,-12.3,-72.9,-25.2C-65.3,-38.1,-56,-48.6,-44.8,-58.5C-33.6,-68.4,-20.5,-77.7,-3.9,-72.8C12.7,-67.8,25.4,-48.6,45,-71.3Z"/></svg>');
+            animation: float 20s infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 50px) rotate(2deg); }
+        }
+
+        .container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            perspective: 1000px;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            transform-style: preserve-3d;
+            animation: logoEntrance 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes logoEntrance {
+            0% { transform: rotateX(90deg) translateY(-100px); opacity: 0; }
+            100% { transform: none; opacity: 1; }
+        }
+
+        .product-form {
+            background: rgba(255,255,255,0.95);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,200,83,0.1);
+            margin: 2rem auto;
+            max-width: 800px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,200,83,0.15);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e0f2e9;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0,200,83,0.1);
+            outline: none;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0 auto;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,200,83,0.3);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e0f2e9;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,200,83,0.1);
+        }
+
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px dashed #e0f2e9;
+        }
+
+        .delete-btn {
+            background: rgba(255, 77, 79, 0.1);
+            color: #ff4d4f;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .delete-btn:hover {
+            background: #ff4d4f;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .product-form {
+                padding: 1.5rem;
+            }
+        }
+
+        .animate-in {
+            animation: cardIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes cardIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+            100% { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-bg"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-shopping-basket"></i>
+                Insta Grocery Link
+            </div>
+        </header>
+
+        <main>
+            <form class="product-form" id="productForm">
+                <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--text);">
+                     List Your Farm Products to direct customers
+                </h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <i class="fas fa-carrot"></i>
+                        <input type="text" id="productName" placeholder="Product Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-weight-hanging"></i>
+                        <input type="number" id="productQuantity" placeholder="Quantity (kg)" min="1" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-rupee-sign"></i>
+                        <input type="number" id="productPrice" placeholder="Price per kg" step="0.01" required>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> List Product
+                </button>
+            </form>
+
+            <div class="products-grid" id="productsContainer"></div>
+        </main>
+    </div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('instaGroceryProducts')) || [];
+
+        const animateAdd = (element) => {
+            element.style.animation = 'cardIn 0.6s forwards';
+            element.style.opacity = '0';
+            setTimeout(() => element.style.opacity = '1', 10);
+        };
+
+        document.getElementById('productForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('productName').value.trim(),
+                quantity: parseFloat(document.getElementById('productQuantity').value),
+                price: parseFloat(document.getElementById('productPrice').value),
+                date: new Date().toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                })
+            };
+
+            if (product.name && product.quantity > 0 && product.price > 0) {
+                products.unshift(product);
+                localStorage.setItem('instaGroceryProducts', JSON.stringify(products));
+                renderProducts();
+                document.getElementById('productForm').reset();
+                
+                // Add visual feedback
+                const btn = document.querySelector('.submit-btn');
+                btn.style.transform = 'scale(0.95)';
+                setTimeout(() => btn.style.transform = 'scale(1)', 200);
+            } else {
+                alert('Please fill all fields correctly!');
+            }
+        });
+
+        const renderProducts = () => {
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = products.map(product => `
+                <div class="product-card animate-in">
+                    <h3><i class="fas fa-seedling"></i> ${product.name}</h3>
+                    <div class="product-meta">
+                        <div>
+                            <i class="fas fa-weight"></i> ${product.quantity}kg
+                        </div>
+                        <div>
+                            <i class="fas fa-rupee-sign"></i> ${product.price.toFixed(2)}
+                        </div>
+                    </div>
+                    <div class="product-meta">
+                        <div>
+                            <i class="fas fa-calculator"></i> ₹${(product.quantity * product.price).toFixed(2)}
+                        </div>
+                        <div>
+                            <i class="fas fa-calendar"></i> ${product.date}
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteProduct(${product.id})">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `).join('');
+        };
+
+        const deleteProduct = (id) => {
+            products = products.filter(product => product.id !== id);
+            localStorage.setItem('instaGroceryProducts', JSON.stringify(products));
+            renderProducts();
+        };
+
+        // Initial render
+        renderProducts();
+    </script>
+</body>
+</html>

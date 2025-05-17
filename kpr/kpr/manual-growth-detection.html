@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seed to Circuit - Tomato Growth Monitor</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #e8f5e9; /* Light green background */
+      color: #2e7d32; /* Dark green text */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #1b5e20; /* Dark green heading */
+    }
+
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    #image-upload {
+      margin: 20px 0;
+    }
+
+    #image-preview {
+      margin: 20px auto;
+      width: 200px;
+      height: 200px;
+      border: 2px solid #2e7d32; /* Green border */
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #label-container {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #2e7d32; /* Green text */
+    }
+
+    #growth-info {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #2e7d32; /* Green text */
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    #days-left {
+      margin-top: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #388e3c; /* Bright green for emphasis */
+    }
+
+    button {
+      background: #4caf50; /* Green button */
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #388e3c; /* Darker green on hover */
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .loading {
+      display: none;
+      font-size: 1.2rem;
+      color: #2e7d32;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Seed to Circuit</h1>
+    <h2>Tomato Growth Monitor</h2>
+    <input type="file" id="image-upload" accept="image/*" onchange="handleImageUpload(event)">
+    <div id="image-preview"></div>
+    <div id="label-container"></div>
+    <div id="growth-info"></div>
+    <div id="days-left"></div>
+    <div class="loading" id="loading">Loading model, please wait...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script type="text/javascript">
+    // Model URL
+    const URL = "https://teachablemachine.withgoogle.com/models/q7a8tiTFD/";
+
+    let model, maxPredictions;
+
+    // Growth stages and days spent in each stage
+    const growthStages = [
+      { name: "Germination", daysSpent: 7, keySigns: "Green sprout appears above soil" },
+      { name: "Early Growth", daysSpent: 30, keySigns: "True leaves and roots develop" },
+      { name: "Vegetative Growth", daysSpent: 23, keySigns: "Vines lengthen, foliage and roots grow, flowers start to emerge" },
+      { name: "Flowering", daysSpent: 20, keySigns: "Yellow flowers appear and open" },
+      { name: "Pollination", daysSpent: 20, keySigns: "Occurs throughout flowering" },
+      { name: "Fruit Formation", daysSpent: 25, keySigns: "Small green fruits appear and grow" },
+      { name: "Ripening", daysSpent: 18, keySigns: "Red color develops" }
+    ];
+
+    // Total days for full growth
+    const totalDays = growthStages.reduce((sum, stage) => sum + stage.daysSpent, 0);
+
+    // Load the model
+    async function loadModel() {
+      try {
+        document.getElementById("loading").style.display = "block";
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+        document.getElementById("loading").style.display = "none";
+      } catch (error) {
+        console.error("Error loading model:", error);
+        document.getElementById("loading").innerHTML = "Failed to load model. Please try again.";
+      }
+    }
+
+    // Handle image upload
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          document.getElementById("image-preview").innerHTML = "";
+          document.getElementById("image-preview").appendChild(img);
+          predict(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Predict the growth stage
+    async function predict(img) {
+      try {
+        const prediction = await model.predict(img);
+        let highestProbability = 0;
+        let predictedStage = "";
+
+        for (let i = 0; i < maxPredictions; i++) {
+          const probability = prediction[i].probability.toFixed(2);
+          if (probability > highestProbability) {
+            highestProbability = probability;
+            predictedStage = prediction[i].className;
+          }
+          document.getElementById("label-container").innerHTML = `${prediction[i].className}: ${probability}`;
+        }
+
+        // Display growth stage information
+        const stage = growthStages.find(stage => stage.name === predictedStage);
+        if (stage) {
+          const daysSpent = stage.daysSpent;
+          const daysLeft = totalDays - daysSpent;
+
+          document.getElementById("growth-info").innerHTML = `
+            <strong>Current Stage:</strong> ${stage.name}<br>
+            <strong>Key Signs:</strong> ${stage.keySigns}<br>
+            <strong>Days Spent:</strong> ${daysSpent} days
+          `;
+          document.getElementById("days-left").innerHTML = `Days left to full growth: ${daysLeft} days`;
+        }
+      } catch (error) {
+        console.error("Error predicting:", error);
+        document.getElementById("label-container").innerHTML = "Error predicting growth stage.";
+      }
+    }
+
+    // Initialize the model on page load
+    loadModel();
+  </script>
+</body>
+</html>

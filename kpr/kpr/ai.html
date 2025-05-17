@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Analysis System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        
+        :root {
+            --primary-green: #2B593F;
+            --secondary-green: #7AB893;
+            --accent-yellow: #FFD700;
+            --pure-white: #FFFFFF;
+            --light-bg: #F5FEF9;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            margin: 0;
+            padding: 20px;
+            color: var(--primary-green);
+        }
+
+        .stage {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .active-stage {
+            display: block;
+        }
+
+        .upload-section {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+      
+        :root {
+            --primary-green: #2B593F;
+            --secondary-green: #7AB893;
+            --accent-yellow: #FFD700;
+            --pure-white: #FFFFFF;
+            --light-bg: #F5FEF9;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            margin: 0;
+            padding: 20px;
+            color: var(--primary-green);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: var(--pure-white);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            animation: slideIn 1s ease;
+            box-shadow: 0 8px 24px rgba(42,89,63,0.1);
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .input-section {
+            background: var(--pure-white);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(42,89,63,0.1);
+            flex: 1;
+            min-width: 300px;
+            transition: transform 0.3s ease;
+        }
+
+        .input-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .file-upload {
+            background: #F5FEF9;
+            border: 2px dashed var(--primary-green);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            background: var(--accent-yellow);
+            border-color: var(--primary-green);
+            transform: scale(1.02);
+        }
+
+        #webcam-container {
+            margin: 1rem auto;
+            border: 3px solid var(--primary-green);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(42,89,63,0.2);
+        }
+
+        .results-section {
+            background: var(--pure-white);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(42,89,63,0.1);
+            flex: 1;
+            min-width: 300px;
+            animation: fadeIn 1s ease;
+        }
+
+        .result-item {
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: #F5FEF9;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            animation: popIn 0.5s ease;
+        }
+
+        .result-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 12px rgba(42,89,63,0.1);
+        }
+
+        .npk-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .npk-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: #ffe100;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .npk-card:hover {
+            transform: scale(1.05);
+            background: var(--accent-yellow);
+        }
+
+        .ai-analysis {
+            background: #FFFBE6;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            border-left: 4px solid var(--primary-green);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        button {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: var(--accent-yellow);
+            color: var(--primary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42,89,63,0.2);
+        }
+
+        progress {
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            background: #E0F0E9;
+        }
+
+        progress::-webkit-progress-bar { background: #E0F0E9; border-radius: 6px; }
+        progress::-webkit-progress-value { 
+            background: var(--accent-yellow);
+            border-radius: 6px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .medicine-list a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .medicine-list a:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-yellow);
+            transition: width 0.3s ease;
+        }
+
+        .medicine-list a:hover:after {
+            width: 100%;
+        }
+
+        .loader {
+            border: 4px solid #E0F0E9;
+            border-top: 4px solid var(--accent-yellow);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        .result-item:hover {
+            transform: translateX(10px);
+            background: var(--primary-green);
+            color: var(--pure-white);
+            box-shadow: 0 4px 12px rgba(42,89,63,0.1);
+        }
+
+        .npk-card:hover {
+            transform: scale(1.05);
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .typewriter {
+            border-right: 2px solid var(--primary-green);
+            white-space: pre-wrap;
+            overflow: hidden;
+            font-family: monospace;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-green); }
+        }
+
+        .treatment-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #F5FEF9;
+            border-radius: 12px;
+        }
+
+        .medicine-recommendations {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .medicine-card {
+            padding: 1rem;
+            background: var(--pure-white);
+            border-radius: 8px;
+            border: 1px solid var(--secondary-green);
+            transition: all 0.3s ease;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(242, 255, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- First Stage - Leaf Detection -->
+    <div id="first-stage" class="stage active-stage">
+        <div class="header">
+            <h1><i class="fas fa-leaf"></i> Leaf Detection System</h1>
+            <p>Use webcam or upload image to verify plant leaf</p>
+        </div>
+
+        <div class="upload-section">
+            <div class="input-section">
+                <button onclick="initWebcamStage1()">
+                    <i class="fas fa-camera"></i> Use Webcam
+                </button>
+                <div id="webcam-container-stage1"></div>
+            </div>
+
+            <div class="input-section">
+                <div class="file-upload" onclick="document.getElementById('file-input-stage1').click()">
+                    <i class="fas fa-upload fa-2x"></i>
+                    <h3>Click to Upload Image</h3>
+                    <p>Supported formats: JPG, PNG, JPEG</p>
+                    <input type="file" id="file-input-stage1" accept="image/*" hidden 
+                           onchange="handleStage1Upload(event)">
+                </div>
+                <img id="upload-preview" alt="Preview" style="display: none; max-width: 400px; margin-top: 1rem;">
+            </div>
+        </div>
+
+        <div id="label-container-stage1" class="result-item" style="margin-top: 2rem;"></div>
+    </div>
+
+    <!-- Second Stage - Crop Health Analysis -->
+    <div id="second-stage" class="stage">
+        <div class="container">
+            <div class="header">
+                <h1><i class="fas fa-seedling"></i> Crop Health Analyzer</h1>
+                <p>Upload plant image or use webcam to analyze crop health</p>
+            </div>
+    
+            <div class="content-wrapper">
+                <div class="input-section">
+                    <button onclick="initWebcam()">
+                        <i class="fas fa-camera"></i> Start Webcam
+                    </button>
+                    <div id="webcam-container"></div>
+    
+                    <div class="file-upload" onclick="document.getElementById('file-input').click()">
+                        <i class="fas fa-upload fa-2x"></i>
+                        <h3>Click to Upload Plant Image</h3>
+                        <p>Supported formats: JPG, PNG, JPEG</p>
+                        <input type="file" id="file-input" accept="image/*" hidden 
+                               onchange="handleImageUpload(event)">
+                    </div>
+                    <img id="preview-image" alt="Preview" style="display:none;">
+                </div>
+    
+                <div class="results-section">
+                    <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+                    <div id="label-container"></div>
+                    
+                    <div class="npk-grid" id="npk-container"></div>
+                    
+                    <div class="ai-analysis">
+                        <h3><i class="fas fa-brain"></i> AI Recommendations</h3>
+                        <div class="loader" id="ai-loader"></div>
+                        <div id="ai-analysis-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script>
+        // First Stage Configuration
+        const TM_MODEL_URL_STAGE1 = "https://teachablemachine.withgoogle.com/models/Iifb6LwUN/";
+        let stage1Model, stage1Webcam;
+         // Ensure these variables are declared at the top
+         const TM_MODEL_URL = "https://teachablemachine.withgoogle.com/models/ZPUXJDZ1w/";
+       
+
+    
+        
+         const THINGSPEAK_API = "https://api.thingspeak.com/channels/2828170/feeds.json?api_key=R7NLLQNPWE6V6RX7&results=1";
+         const GEMINI_API_KEY = "AIzaSyDgqAoyLWk6Du7xTgXzghX2TtcE4N646Nk";
+         const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+ 
+       
+ 
+         // Model Initialization
+         async function initModel() {
+             model = await tmImage.load(TM_MODEL_URL + "model.json", TM_MODEL_URL + "metadata.json");
+         }
+
+        // First Stage Functions
+        async function initWebcamStage1() {
+            try {
+                const modelURL = TM_MODEL_URL_STAGE1 + "model.json";
+                const metadataURL = TM_MODEL_URL_STAGE1 + "metadata.json";
+                
+                stage1Model = await tmImage.load(modelURL, metadataURL);
+                stage1Webcam = new tmImage.Webcam(400, 400, true);
+                
+                await stage1Webcam.setup();
+                await stage1Webcam.play();
+                
+                document.getElementById('webcam-container-stage1').appendChild(stage1Webcam.canvas);
+                webcamLoopStage1();
+            } catch (error) {
+                console.error('Webcam Error:', error);
+                alert('Error accessing webcam. Please check permissions.');
+            }
+        }
+
+        async function webcamLoopStage1() {
+            stage1Webcam.update();
+            const predictions = await stage1Model.predict(stage1Webcam.canvas);
+            handleStage1Prediction(predictions);
+            requestAnimationFrame(webcamLoopStage1);
+        }
+
+        async function handleStage1Upload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                
+                img.onload = async () => {
+                    // Show preview
+                    const preview = document.getElementById('upload-preview');
+                    preview.src = img.src;
+                    preview.style.display = 'block';
+                    
+                    // Load model if not already loaded
+                    if (!stage1Model) {
+                        const modelURL = TM_MODEL_URL_STAGE1 + "model.json";
+                        const metadataURL = TM_MODEL_URL_STAGE1 + "metadata.json";
+                        stage1Model = await tmImage.load(modelURL, metadataURL);
+                    }
+                    
+                    // Make prediction
+                    const predictions = await stage1Model.predict(img);
+                    handleStage1Prediction(predictions);
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleStage1Prediction(predictions) {
+            const container = document.getElementById('label-container-stage1');
+            const topPrediction = predictions.reduce((max, current) => 
+                (current.probability > max.probability) ? current : max);
+            
+            container.innerHTML = `
+                <div class="result-item">
+                    <strong>${topPrediction.className}</strong>
+                    <progress value="${topPrediction.probability}" max="1"></progress>
+                    ${(topPrediction.probability * 100).toFixed(1)}%
+                </div>
+            `;
+
+            if(topPrediction.className.toLowerCase() === 'others') {
+                window.location.href = 'error.html';
+                return;
+            }
+
+            if(topPrediction.className.toLowerCase() === 'leaf') {
+                // Switch to second stage after short delay
+                setTimeout(() => {
+                    document.getElementById('first-stage').classList.remove('active-stage');
+                    document.getElementById('second-stage').classList.add('active-stage');
+                    initCropAnalysis();
+                }, 1500);
+            }
+        }
+
+       
+        let model, webcam;
+
+        // Model Initialization
+        async function initModel() {
+            model = await tmImage.load(TM_MODEL_URL + "model.json", TM_MODEL_URL + "metadata.json");
+        }
+
+        // Webcam Handling
+        async function initWebcam() {
+            await initModel();
+            webcam = new tmImage.Webcam(400, 400, true);
+            await webcam.setup();
+            await webcam.play();
+            document.getElementById('webcam-container').appendChild(webcam.canvas);
+            webcamLoop();
+        }
+
+        async function webcamLoop() {
+            webcam.update();
+            await predict(webcam.canvas);
+            requestAnimationFrame(webcamLoop);
+        }
+
+        // Image Upload Handling
+        async function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = async () => {
+                    document.getElementById('preview-image').style.display = 'block';
+                    document.getElementById('preview-image').src = img.src;
+                    await initModel();
+                    await predict(img);
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function predict(imageElement) {
+            const predictions = await model.predict(imageElement);
+            displayPredictions(predictions);
+        
+            // Get the highest probability disease
+            const detectedDisease = predictions[0].className;
+            
+            // Send the disease name to PHP for storage
+            saveDiseaseToDatabase(detectedDisease);
+        
+            // Fetch NPK Data
+            const npkData = await fetchNPKData();
+            displayNPKData(npkData);
+        
+            // Get AI analysis
+            if(npkData) {
+                const analysis = await getGeminiAnalysis(detectedDisease, npkData);
+                displayAnalysis(analysis);
+            }
+        }
+        
+        function saveDiseaseToDatabase(disease) {
+            fetch("save_disease.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `disease=${encodeURIComponent(disease)}`
+            })
+            .then(response => response.text())
+            .then(data => console.log("🛠 Server Response:", data))
+            .catch(error => console.error("❌ Error:", error));
+        }
+        
+
+        function displayPredictions(predictions) {
+            const container = document.getElementById('label-container');
+            container.innerHTML = predictions.sort((a, b) => b.probability - a.probability)
+                .map(p => `
+                    <div class="result-item">
+                        <strong>${p.className}</strong>
+                        <progress value="${p.probability}" max="1"></progress>
+                        ${(p.probability * 100).toFixed(1)}%
+                    </div>
+                `).join('');
+        }
+
+        async function fetchNPKData() {
+            try {
+                const response = await fetch(THINGSPEAK_API);
+                const data = await response.json();
+                return data.feeds[0];
+            } catch (error) {
+                console.error('NPK Data Error:', error);
+                return null;
+            }
+        }
+
+        function displayNPKData(data) {
+            const container = document.getElementById('npk-container');
+            if(!data) {
+                container.innerHTML = '<div class="result-item">⚠️ NPK Data Unavailable</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="npk-card">
+                    <h4><i class="fas fa-leaf"></i> Nitrogen</h4>
+                    <div class="sensor-value">${data.field1}</div>
+                    <small>ppm</small>
+                </div>
+                <div class="npk-card">
+                    <h4><i class="fas fa-atom"></i> Phosphorus</h4>
+                    <div class="sensor-value">${data.field2}</div>
+                    <small>ppm</small>
+                </div>
+                <div class="npk-card">
+                    <h4><i class="fas fa-bolt"></i> Potassium</h4>
+                    <div class="sensor-value">${data.field3}</div>
+                    <small>ppm</small>
+                </div>
+            `;
+        }
+
+        async function getGeminiAnalysis(disease, npkData) {
+            const loader = document.getElementById('ai-loader');
+            const content = document.getElementById('ai-analysis-content');
+            
+            loader.style.display = 'block';
+            content.innerHTML = '';
+
+            try {
+                const response = await fetch(GEMINI_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Analyze crop health for ${disease} with NPK levels: 
+                                N-${npkData.field1}, P-${npkData.field2}, K-${npkData.field3}.
+                                Provide detailed organic and chemical treatment options,
+                                prevention strategies, and fertilizer recommendations
+                                in markdown format with clear sections.`
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                const analysisText = data.candidates[0].content.parts[0].text;
+                return analysisText;
+            } catch (error) {
+                return '⚠️ Failed to get AI analysis. Please try again.';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function displayAnalysis(text) {
+            const container = document.getElementById('ai-analysis-content');
+            container.innerHTML = '';
+            
+            // Add typing animation
+            container.classList.add('typewriter');
+            
+            let i = 0;
+            const speed =2;
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    container.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    container.classList.remove('typewriter');
+                    addMedicineRecommendations();
+                }
+            }
+            
+            typeWriter();
+        }
+
+        function addMedicineRecommendations() {
+            const predictions = document.querySelector('.result-item');
+            if (!predictions) return;
+
+            const disease = predictions.querySelector('h3').textContent.replace('⚡ ', '');
+            const medicines = MEDICINE_DB[disease] || [];
+            
+            if (medicines.length === 0) return;
+
+            const medicineHTML = `
+                <div class="treatment-section">
+                    <h4><i class="fas fa-prescription-bottle-alt"></i> Recommended Treatments</h4>
+                    <div class="medicine-recommendations">
+                        ${medicines.map(med => `
+                            <div class="medicine-card">
+                                <a href="${med.url}" target="_blank">
+                                    <i class="fas fa-capsules"></i> ${med.name}
+                                </a>
+                                <p class="price">$${Math.floor(Math.random() * 20 + 10)}.99</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('ai-analysis-content').innerHTML += medicineHTML;
+        }
+
+        const MEDICINE_DB = {
+            "Leaf Rust": [
+                { name: "Bonide Copper Fungicide", url: "#" },
+                { name: "Garden Safe Fungicide", url: "#" },
+                { name: "Southern Ag Liquid Copper", url: "#" }
+            ],
+            "Powdery Mildew": [
+                { name: "Serenade Garden Fungicide", url: "#" },
+                { name: "Neem Oil Fungicide", url: "#" },
+                { name: "Daconil Fungicide", url: "#" }
+            ],
+            "Blight": [
+                { name: "Copper Fungicide Spray", url: "#" },
+                { name: "Garden Phos Fungicide", url: "#" },
+                { name: "Monterey Agri-Fos", url: "#" }
+            ]
+        };
+
+        // Add animated price ticker
+        function updatePrices() {
+            document.querySelectorAll('.price').forEach(price => {
+                const change = (Math.random() * 0.2 - 0.1).toFixed(2);
+                const current = parseFloat(price.textContent.replace(/[^0-9.]/g, ''));
+                const newPrice = (current + current * change).toFixed(2);
+                price.textContent = `$${newPrice}`;
+                price.style.color = change >= 0 ? '#e74c3c' : '#2ecc71';
+                setTimeout(updatePrices, 5000);
+            });
+        }
+
+        // Initialize first stage on load
+        window.onload = () => {
+            document.getElementById('first-stage').classList.add('active-stage');
+        };// Add this function to handle second stage initialization
+        async function initCropAnalysis() {
+            try {
+                // Load the second stage model
+                const modelURL = TM_MODEL_URL + "model.json";
+                const metadataURL = TM_MODEL_URL + "metadata.json";
+                model = await tmImage.load(modelURL, metadataURL);
+        
+                // Reuse the webcam from first stage or create new one
+                if (stage1Webcam) {
+                    webcam = stage1Webcam;
+                    document.getElementById('webcam-container').appendChild(webcam.canvas);
+                } else {
+                    // If using uploaded image, display it
+                    const preview = document.getElementById('upload-preview');
+                    if (preview.src) {
+                        const img = new Image();
+                        img.src = preview.src;
+                        await predict(img);
+                        return;
+                    }
+                }
+        
+                // Start prediction loop
+                webcamLoop();
+            } catch (error) {
+                console.error('Error initializing crop analysis:', error);
+                alert('Error initializing crop analysis. Please try again.');
+            }
+        }
+        
+        // Modify the webcamLoop function for second stage
+        async function webcamLoop() {
+            if (webcam) {
+                webcam.update();
+                await predict(webcam.canvas);
+            }
+            requestAnimationFrame(webcamLoop);
+        }
+        
+        // Update the handleStage1Prediction function
+        function handleStage1Prediction(predictions) {
+            const container = document.getElementById('label-container-stage1');
+            const topPrediction = predictions.reduce((max, current) => 
+                (current.probability > max.probability) ? current : max);
+            
+            container.innerHTML = `
+                <div class="result-item">
+                    <strong>${topPrediction.className}</strong>
+                    <progress value="${topPrediction.probability}" max="1"></progress>
+                    ${(topPrediction.probability * 100).toFixed(1)}%
+                </div>
+            `;
+        
+            if(topPrediction.className.toLowerCase() === 'others') {
+                window.location.href = '/error.html';
+                return;
+            }
+        
+            if(topPrediction.className.toLowerCase() === 'leaf') {
+                // Switch to second stage after short delay
+                setTimeout(async () => {
+                    document.getElementById('first-stage').classList.remove('active-stage');
+                    document.getElementById('second-stage').classList.add('active-stage');
+                    await initCropAnalysis(); // Initialize second stage
+                }, 1500);
+            }
+        }async function predict(imageElement) {
+            try {
+                const predictions = await model.predict(imageElement);
+                displayPredictions(predictions);
+        
+                // Get the highest probability disease
+                const detectedDisease = predictions[0].className;
+        
+                // Retrieve location data from local storage
+                const district = localStorage.getItem('district');
+                const village = localStorage.getItem('village');
+        
+                // Get current time in ISO format (e.g., "2023-10-15T12:34:56.789Z")
+                const currentTime = new Date().toISOString();
+        
+                // Create an object with the data
+                const predictionData = {
+                    district: district,
+                    village: village,
+                    disease: detectedDisease,
+                    time: currentTime
+                };
+        
+                // Debug: Log the data being sent
+                console.log("🛠 Data being sent to PHP:", predictionData);
+        
+                // Send data to the PHP script
+                const saveResponse = await fetch('save_data.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(predictionData)
+                });
+        
+                // Check if the data was saved successfully
+                if (saveResponse.ok) {
+                    const result = await saveResponse.text();
+                    console.log("🛠 Server Response:", result);
+                } else {
+                    console.error('❌ Failed to save data to the server');
+                }
+        
+                // Fetch NPK Data
+                const npkData = await fetchNPKData();
+                displayNPKData(npkData);
+        
+                // Get AI analysis (Gemini)
+                if (npkData) {
+                    const analysis = await getGeminiAnalysis(detectedDisease, npkData);
+                    displayAnalysis(analysis);
+                }
+            } catch (error) {
+                console.error('❌ Prediction Error:', error);
+                displayAnalysis('⚠️ Error during prediction. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

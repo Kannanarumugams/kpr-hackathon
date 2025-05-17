@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onion Growth Monitor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .plant-visualization {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(180deg, #f0f9eb 0%, #e1f3d8 100%);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .growth-stage {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 90%;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .plant-stats {
+            padding: 1rem;
+        }
+
+        .status-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .days-counter {
+            background: #2c5f2d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2c5f2d;
+            width: 45%;
+            transition: width 1s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .npk-indicators {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .npk-pill {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .nitrogen { background: #f0b429; }
+        .phosphorus { background: #48bb78; }
+        .potassium { background: #4299e1; }
+
+        .report-button {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid #2c5f2d;
+            color: #2c5f2d;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .disease-warning {
+            color: #e53e3e;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .plant-visualization {
+                height: 600px;
+            }
+        }
+
+        @keyframes subtleGrowth {
+            0% { transform: translateX(-50%) scale(0.98); }
+            50% { transform: translateX(-50%) scale(1.02); }
+            100% { transform: translateX(-50%) scale(0.98); }
+        }
+
+        .growth-stage {
+            animation: subtleGrowth 5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="plant-visualization">
+            <div class="status-header">
+                <h1>Onion Plant Monitor</h1>
+                <div class="days-counter">🌱 Day 18</div>
+            </div>
+            <img src="https://www.svgrepo.com/show/530362/seedling.svg" class="growth-stage" alt="Onion Plant">
+        </div>
+
+        <div class="plant-stats">
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Growth Progress</span>
+                    <span>45%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%"></div>
+                </div>
+                <div class="estimated-days">Estimated harvest in 30-40 days</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>PLANT HEALTH</h3>
+                    <div class="progress-bar" style="height: 8px; margin: 10px 0;">
+                        <div class="progress-fill" style="width: 60%; background: #e53e3e;"></div>
+                    </div>
+                    <div class="health-status">Poor</div>
+                    <div class="disease-warning">⚠️ Affected by Onion Downy Mildew</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>SOIL NUTRITION</h3>
+                    <div class="npk-indicators">
+                        <div class="npk-pill nitrogen">N: 12%</div>
+                        <div class="npk-pill phosphorus">P: 8%</div>
+                        <div class="npk-pill potassium">K: 10%</div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="generateReportButton" class="report-button">Generate Growth Report</button>
+        </div>
+    </div>
+
+    <script>
+        const growthStages = [
+            'https://www.svgrepo.com/show/530362/seedling.svg', // Seedling
+            'https://www.svgrepo.com/show/530364/plant-sprout.svg', // Sprout
+            'https://www.svgrepo.com/show/530365/flower.svg', // Bulb Formation
+            'https://www.svgrepo.com/show/530366/fruit.svg' // Mature Onion
+        ];
+
+        const elements = {
+            progressFill: document.querySelector('.progress-fill'),
+            daysCounter: document.querySelector('.days-counter'),
+            plantImage: document.querySelector('.growth-stage'),
+            healthFill: document.querySelectorAll('.progress-fill')[1]
+        };
+
+        const growthData = {
+            currentStage: 1,
+            days: 18,
+            progress: 45,
+            health: 60,
+            npk: {N: 12, P: 8, K: 10}
+        };
+
+        function updateVisuals() {
+            const stageIndex = Math.min(Math.floor(growthData.progress / 25), 3);
+            elements.plantImage.src = growthStages[stageIndex];
+            elements.progressFill.style.width = `${growthData.progress}%`;
+            elements.healthFill.style.width = `${growthData.health}%`;
+            elements.daysCounter.textContent = `🌱 Day ${growthData.days}`;
+        }
+
+        setInterval(() => {
+            if(growthData.progress < 100) {
+                growthData.days++;
+                growthData.progress = Math.min(growthData.progress + 0.5, 100);
+                growthData.health = Math.max(60 - Math.random() * 5, 40); // Health decreases due to disease
+                updateVisuals();
+            }
+        }, 3000);
+
+        updateVisuals();
+
+        window.addEventListener('resize', () => {
+            elements.plantImage.style.height = window.innerWidth < 768 ? '70%' : '90%';
+        });
+
+        // Add event listener to the button
+        document.getElementById('generateReportButton').addEventListener('click', () => {
+            window.location.href = 'generated-report.html';
+        });
+    </script>
+</body>
+</html>

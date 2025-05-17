@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Partner Portal - Signup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #28a745 0%, #34d058 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 4s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(45deg) translateX(-200%); }
+            100% { transform: rotate(45deg) translateX(200%); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #28a745;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #22863a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .toggle-text a {
+            color: #28a745;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-text a:hover {
+            color: #22863a;
+            text-decoration: underline;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.2rem;
+            }
+
+            input {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .toggle-text {
+                margin-top: 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Signup Form -->
+        <div class="signup-form">
+            <h1>Create Account ✨</h1>
+            <form id="signupForm">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Full name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="signupEmail" placeholder="Email address" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="signupPassword" placeholder="Create password" required>
+                </div>
+                <button type="submit">Register Now</button>
+            </form>
+            <p class="toggle-text">Already have an account? <a href="login s2c store partner.html">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Signup Handler
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            const users = JSON.parse(localStorage.getItem('partnerUsers')) || [];
+            
+            if(users.some(u => u.email === email)) {
+                alert('User already exists!');
+                return;
+            }
+
+            const newUser = {
+                name: name,
+                email: email,
+                password: password
+            };
+
+            users.push(newUser);
+            localStorage.setItem('partnerUsers', JSON.stringify(users));
+            
+            alert('Registration successful! Redirecting to login...');
+            window.location.href = 'login.html'; // Redirect to login page
+        });
+
+        // Initial Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.container');
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        });
+    </script>
+</body>
+</html>

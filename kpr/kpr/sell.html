@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect - Farmer Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5f2d, #97bc62);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 0 1rem;
+        }
+
+        .list-product-btn {
+            background: #2c5f2d;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .list-product-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .product-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            max-width: 600px;
+            display: none;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #97bc62;
+            outline: none;
+        }
+
+        .products-list {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease-in;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .product-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .active-status {
+            background: #e8f5e9;
+            color: #2c5f2d;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-top: 80px;
+            }
+            
+            .list-product-btn {
+                width: 100%;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">AgriConnect</div>
+            <div>Farmer Dashboard</div>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <button class="list-product-btn" onclick="showProductForm()">List Your Product ➕</button>
+
+        <div class="product-form" id="productForm">
+            <h2 style="margin-bottom: 1.5rem;">List New Product</h2>
+            <form id="productListingForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productType">Product Type</label>
+                    <select id="productType" required>
+                        <option value="">Select Category</option>
+                        <option value="vegetables">Vegetables</option>
+                        <option value="fruits">Fruits</option>
+                        <option value="grains">Grains</option>
+                        <option value="dairy">Dairy</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity (in kg)</label>
+                    <input type="number" id="quantity" step="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Expected Price per kg (₹)</label>
+                    <input type="number" id="price" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="timeLimit">Bidding Time Limit</label>
+                    <input type="text" id="timeLimit" placeholder="e.g., 48 hours" required>
+                </div>
+
+                <button type="submit" class="list-product-btn" style="width: 100%; margin-top: 1rem;">
+                    Start Bidding 🚀
+                </button>
+            </form>
+        </div>
+
+        <div class="products-list" id="productsList">
+            <!-- Listed products will appear here -->
+        </div>
+    </div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('farmerProducts')) || [];
+
+        function showProductForm() {
+            const form = document.getElementById('productForm');
+            form.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const newProduct = {
+                id: Date.now(),
+                name: document.getElementById('productName').value,
+                type: document.getElementById('productType').value,
+                quantity: document.getElementById('quantity').value,
+                price: document.getElementById('price').value,
+                timeLimit: document.getElementById('timeLimit').value,
+                date: new Date().toLocaleString(),
+                status: 'Active'
+            };
+
+            products.push(newProduct);
+            localStorage.setItem('farmerProducts', JSON.stringify(products));
+            
+            updateProductList();
+            document.getElementById('productForm').style.display = 'none';
+            event.target.reset();
+        }
+
+        function updateProductList() {
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = '';
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <h3 style="color: #2c5f2d;">${product.name}</h3>
+                    <div style="margin: 0.5rem 0; color: #666;">
+                        Category: ${product.type.toUpperCase()}
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; color: #888;">Quantity</div>
+                            <div style="font-weight: 500;">${product.quantity} kg</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: #888;">Expected Price</div>
+                            <div style="font-weight: 500;">₹${product.price}/kg</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.9rem; color: #888;">Time Limit</div>
+                            <div style="font-weight: 500;">${product.timeLimit}</div>
+                        </div>
+                    </div>
+                    <div class="product-status active-status">
+                        ${product.status} Bidding
+                    </div>
+                `;
+                productsList.appendChild(productCard);
+            });
+        }
+
+        // Initial load of products
+        updateProductList();
+
+        // Close form when clicking outside
+        window.onclick = function(event) {
+            const form = document.getElementById('productForm');
+            if (event.target === form) {
+                form.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help & Support - Seed to Circuit</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #4CAF50, #8BC34A); /* Green gradient */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2E7D32; /* Dark green */
+      margin-bottom: 20px;
+      font-size: 2rem;
+      animation: slideDown 0.8s ease-in-out;
+    }
+
+    p {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+      animation: slideUp 0.8s ease-in-out;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #4CAF50; /* Green border on focus */
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #4CAF50, #8BC34A); /* Green gradient */
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #388E3C, #689F38); /* Darker green gradient */
+      transform: scale(1.05);
+    }
+
+    /* Confirmation Message */
+    #confirmationMessage {
+      text-align: center;
+      margin-top: 20px;
+      color: #4CAF50; /* Green */
+      font-weight: bold;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      input, select, textarea {
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Help & Support</h1>
+    <p>If you have any questions or issues, please fill out the form below, and we'll get back to you as soon as possible.</p>
+    
+    <form id="helpForm">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="queryType">Query Type:</label>
+        <select id="queryType" name="queryType" required>
+          <option value="">Select an option</option>
+          <option value="general">General Inquiry</option>
+          <option value="technical">Technical Issue</option>
+          <option value="billing">Billing Issue</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+      </div>
+      
+      <button type="submit">Submit</button>
+    </form>
+    
+    <div id="confirmationMessage" class="hidden">
+      <p>Thank you for contacting us! We'll get back to you soon.</p>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript for Form Submission
+    document.getElementById("helpForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the form from submitting the traditional way
+
+      // Get form values
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const queryType = document.getElementById("queryType").value;
+      const message = document.getElementById("message").value;
+
+      // Basic validation
+      if (!name || !email || !queryType || !message) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      // Simulate form submission (you can replace this with an actual API call)
+      console.log("Form submitted:", { name, email, queryType, message });
+
+      // Hide the form and show the confirmation message
+      document.getElementById("helpForm").classList.add("hidden");
+      document.getElementById("confirmationMessage").classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>

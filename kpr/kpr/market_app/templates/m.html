@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vegetable Price List</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
+  <script type="text/javascript">
+    window.tailwind.config = {
+      darkMode: ['class'],
+      theme: {
+        extend: {
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))'
+            },
+            secondary: {
+              DEFAULT: 'hsl(var(--secondary))',
+              foreground: 'hsl(var(--secondary-foreground))'
+            },
+            destructive: {
+              DEFAULT: 'hsl(var(--destructive))',
+              foreground: 'hsl(var(--destructive-foreground))'
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+              foreground: 'hsl(var(--muted-foreground))'
+            },
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+              foreground: 'hsl(var(--accent-foreground))'
+            },
+            popover: {
+              DEFAULT: 'hsl(var(--popover))',
+              foreground: 'hsl(var(--popover-foreground))'
+            },
+            card: {
+              DEFAULT: 'hsl(var(--card))',
+              foreground: 'hsl(var(--card-foreground))'
+            },
+          },
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer base {
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 240 10% 3.9%;
+        --primary: 34 89% 50%; /* Yellow */
+        --primary-foreground: 0 0% 98%;
+        --secondary: 120 60% 40%; /* Green */
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --accent: 120 60% 40%; /* Green */
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 5.9% 90%;
+        --input: 240 5.9% 90%;
+        --ring: 240 5.9% 10%;
+        --radius: 0.5rem;
+      }
+      .dark {
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 34 89% 50%; /* Yellow */
+        --primary-foreground: 240 5.9% 10%;
+        --secondary: 120 60% 40%; /* Green */
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 120 60% 40%; /* Green */
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 240 4.9% 83.9%;
+      }
+    }
+
+    @layer utilities {
+      .animate-fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-white via-green-50 to-yellow-50 min-h-screen">
+  <div class="container mx-auto p-4">
+    <!-- Back Button -->
+    <div class="back-button bg-primary text-white p-3 rounded-lg cursor-pointer inline-block mb-4 hover:bg-primary/90 transition-colors duration-200">
+      <i class="fas fa-arrow-left"></i>
+      Back
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container mb-6">
+      <input type="text" class="search-bar w-full bg-white border-2 border-zinc-300 rounded-lg p-3 transition duration-200 ease-in-out focus:border-primary focus:ring-2 focus:ring-primary/50" placeholder="Search vegetables..." id="searchInput" />
+    </div>
+
+    <!-- Price List -->
+    <div class="grid gap-4" id="priceList">
+      <!-- Items will be dynamically rendered here -->
+    </div>
+  </div>
+
+  <script>
+    let priceData = {{ price_data | tojson }};
+
+    function renderListItems(data) {
+      const container = document.getElementById("priceList");
+      container.innerHTML = "";
+      data.forEach((item, index) => {
+        const priceChange = ((item["Price Increase"] / item["Previous Min Price"]) * 100).toFixed(1);
+        const changeClass = item["Price Increase"] >= 0 ? "text-green-600" : "text-red-600";
+        const arrowIcon = item["Price Increase"] >= 0 ? "fa-arrow-up" : "fa-arrow-down";
+
+        const listItem = document.createElement("div");
+        listItem.className = `list-item bg-white rounded-lg shadow-md p-4 flex items-center transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg animate-fade-in-up delay-${index * 100}`;
+        listItem.style.animationDelay = `${index * 100}ms`;
+        listItem.innerHTML = `
+          <div class="veg-info flex-1 min-w-0">
+            <div class="veg-header flex justify-between items-center mb-2">
+              <span class="veg-name text-lg font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">${item["Vegetable"]}</span>
+              <span class="price-tag text-primary text-lg font-semibold ml-4">₹${item["Current Price"]}</span>
+            </div>
+            <div class="meta-info flex items-center gap-4">
+              <span class="change-indicator ${changeClass} flex items-center text-sm font-medium py-1 px-2 rounded-md">
+                <i class="fas ${arrowIcon} mr-1"></i>
+                ${Math.abs(priceChange)}%
+              </span>
+              <span class="quantity text-zinc-600 text-sm">Per kg</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(listItem);
+      });
+    }
+
+    // Initial render
+    renderListItems(priceData);
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const filteredData = priceData.filter(item =>
+        item["Vegetable"].toLowerCase().includes(searchTerm)
+      );
+      renderListItems(filteredData);
+    });
+
+    // Back button functionality
+    document.querySelector('.back-button').addEventListener('click', () => {
+      window.history.back();
+    });
+  </script>
+</body>
+</html>

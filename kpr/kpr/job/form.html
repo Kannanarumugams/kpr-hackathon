@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Job Registration Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://img.freepik.com/premium-photo/indian-farmer-working-green-pigeon-peas-field-with-bullock_54391-6546.jpg?w=1380');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 100, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(0);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        h1 {
+            color: #2d5a27;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a752c;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #c3d898;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fff0;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #8db654;
+            box-shadow: 0 0 10px rgba(141, 182, 84, 0.3);
+        }
+
+        button {
+            background: #8db654;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #759d44;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .decoration {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .decoration img {
+            width: 80px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Farmer Registration Form 🚜</h1>
+        <div class="decoration">
+            <img src="https://img.freepik.com/premium-photo/indian-farmer-with-fresh-produce-traditional-attire_878783-14661.jpg?ga=GA1.1.1837098921.1742286852&semt=ais_hybrid" alt="Farming Icon">
+        </div>
+        <form action="save_farmers.php" method="POST">
+
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="village">Village Name:</label>
+                <input type="text" id="village" name="village" required>
+            </div>
+
+            <div class="form-group">
+                <label for="district">District Name:</label>
+                <input type="text" id="district" name="district" required>
+            </div>
+
+            <!-- Added Contact Number Input -->
+            <div class="form-group">
+                <label for="contact">Contact Number:</label>
+                <input type="tel" id="contact" name="contact" pattern="[0-9]{10}" placeholder="Enter 10-digit number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" min="18" max="70" required>
+            </div>
+
+            <div class="form-group">
+                <label for="work">Type of Work:</label>
+                <select id="work" name="work" required>
+                    <option value="">Select Work Type</option>
+                    <option value="field_worker">Field Worker</option>
+                    <option value="tractor_driver">Tractor Driver</option>
+                    <option value="harvest_specialist">Harvest Specialist</option>
+                    <option value="irrigation_expert">Irrigation Expert</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="experience">Experience (in years):</label>
+                <input type="number" id="experience" name="experience" min="0" max="50" required>
+            </div>
+
+            <div class="form-group">
+                <label for="salary">Expected Salary (per day):</label>
+                <input type="number" id="salary" name="salary" min="300" step="100" required>
+            </div>
+
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+</body>
+</html>

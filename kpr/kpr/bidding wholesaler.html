@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect - Place Bid</title>
+    <style>
+        /* Reuse previous styles and add new ones */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5f2d, #97bc62);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .bid-container {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 0 1rem;
+        }
+
+        .farmer-details {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .product-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #2c5f2d;
+        }
+
+        .bid-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .bid-input {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 200px;
+            font-size: 1rem;
+        }
+
+        .current-bids {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .bid-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .bid-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: #f9f9f9;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .timer {
+            font-size: 1.2rem;
+            color: #e74c3c;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Reuse previous button styles */
+        .bid-btn {
+            background: #2c5f2d;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .bid-btn:hover {
+            background: #1e401f;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">AgriConnect</div>
+            <div>
+                <button class="bid-btn" style="padding: 0.5rem 1rem;">Dashboard</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="bid-container">
+        <!-- Farmer Details Section -->
+        <div class="farmer-details">
+            <h2 id="farmerName">Raju Farms</h2>
+            <p id="farmerLocation" style="color: #666; margin-top: 0.5rem;">Chennai, TN (15 km away)</p>
+            
+            <div class="product-info">
+                <div class="info-card">
+                    <h3>Products Available</h3>
+                    <ul>
+                        <li>Tomatoes</li>
+                        <li>Onions</li>
+                        <li>Potatoes</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h3>Total Quantity</h3>
+                    <p>500 kg</p>
+                </div>
+                <div class="info-card">
+                    <h3>Expected Price</h3>
+                    <p>₹35/kg</p>
+                </div>
+                <div class="info-card">
+                    <h3>Bid Ends In</h3>
+                    <div class="timer" id="countdown">2d 12h 30m</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bid Form Section -->
+        <div class="bid-form">
+            <h2>Place Your Bid</h2>
+            <form id="bidForm" onsubmit="handleBid(event)">
+                <div class="form-group">
+                    <label for="bidAmount">Bid Amount (per kg)</label>
+                    <div class="bid-input">
+                        <input type="number" step="0.01" id="bidAmount" required placeholder="Enter amount in ₹">
+                        <button type="submit" class="bid-btn">Submit Bid</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Current Bids Section -->
+        <div class="current-bids">
+            <h2>Current Bids</h2>
+            <ul class="bid-list" id="bidList">
+                <!-- Bid items will be dynamically added here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - In real implementation, this would come from an API
+        let bids = [
+            { bidder: "FreshMart", amount: 38.50, timestamp: "2024-02-15T10:30:00" },
+            { bidder: "SuperFoods", amount: 37.00, timestamp: "2024-02-15T09:45:00" },
+            { bidder: "CityGrocers", amount: 36.25, timestamp: "2024-02-15T08:15:00" }
+        ];
+
+        // Initialize countdown timer
+        const countdownElement = document.getElementById('countdown');
+        const bidEndTime = new Date('2024-02-18T23:59:59').getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = bidEndTime - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
+        // Handle bid submission
+        function handleBid(event) {
+            event.preventDefault();
+            const bidAmount = parseFloat(document.getElementById('bidAmount').value);
+            
+            if (bidAmount) {
+                const newBid = {
+                    bidder: "Your Bid", // In real implementation, use logged-in user
+                    amount: bidAmount,
+                    timestamp: new Date().toISOString()
+                };
+                
+                bids.unshift(newBid); // Add to beginning of array
+                updateBidList();
+                document.getElementById('bidForm').reset();
+            }
+        }
+
+        // Update bid list display
+        function updateBidList() {
+            const bidList = document.getElementById('bidList');
+            bidList.innerHTML = '';
+
+            bids.forEach(bid => {
+                const bidItem = document.createElement('li');
+                bidItem.className = 'bid-item';
+                bidItem.innerHTML = `
+                    <div>
+                        <strong>${bid.bidder}</strong>
+                        <div style="color: #666; font-size: 0.9rem">
+                            ${new Date(bid.timestamp).toLocaleString()}
+                        </div>
+                    </div>
+                    <div style="font-size: 1.2rem; color: #2c5f2d">
+                        ₹${bid.amount.toFixed(2)}/kg
+                    </div>
+                `;
+                bidList.appendChild(bidItem);
+            });
+        }
+
+        // Initial render of bids
+        updateBidList();
+    </script>
+</body>
+</html>

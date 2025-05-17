@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed to Circuit - Farmer Community</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-green: #2C5C2F;
+            --secondary-green: #3A7D44;
+            --accent-yellow: #FFD700;
+            --text-dark: #333333;
+            --text-light: #FFFFFF;
+            --background-light: #F9FBF8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-green);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--text-light);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 2rem;
+        }
+
+        /* Post Form */
+        .post-form {
+            background: var(--text-light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .post-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+        }
+
+        .post-form input[type="file"] {
+            margin-bottom: 1rem;
+        }
+
+        .post-form button {
+            background: var(--accent-yellow);
+            color: var(--text-dark);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .post-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Posts Section */
+        .posts-section {
+            margin-top: 2rem;
+        }
+
+        .post-card {
+            background: var(--text-light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .post-author {
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .post-content {
+            margin-bottom: 1rem;
+        }
+
+        .post-media {
+            margin-top: 1rem;
+        }
+
+        .post-media img, .post-media video {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .post-actions button {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .post-actions button:hover {
+            opacity: 0.8;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .post-form textarea {
+                font-size: 0.9rem;
+            }
+
+            .post-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">SEED TO CIRCUIT</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Post Form -->
+        <div class="post-form">
+            <textarea id="postContent" placeholder="Share your thoughts, ask questions, or post updates..." rows="4"></textarea>
+            <input type="file" id="postMedia" accept="image/*, video/*">
+            <button onclick="createPost()">Post</button>
+        </div>
+
+        <!-- Posts Section -->
+        <div class="posts-section" id="postsSection">
+            <!-- Posts will be dynamically added here -->
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // Predefined users
+        const users = [
+            { id: 1, name: 'Raju Kumar', avatar: 'https://via.placeholder.com/50' },
+            { id: 2, name: 'Priya Sharma', avatar: 'https://via.placeholder.com/50' },
+            { id: 3, name: 'Anil Patel', avatar: 'https://via.placeholder.com/50' }
+        ];
+
+        // Load posts from localStorage
+        let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+        // Function to create a new post
+        function createPost() {
+            const postContent = document.getElementById('postContent').value;
+            const postMedia = document.getElementById('postMedia').files[0];
+            if (postContent.trim() === '' && !postMedia) {
+                alert('Please write something or upload an image/video!');
+                return;
+            }
+
+            const reader = new FileReader();
+            if (postMedia) {
+                reader.readAsDataURL(postMedia);
+                reader.onload = () => {
+                    const newPost = {
+                        id: Date.now(),
+                        author: users[Math.floor(Math.random() * users.length)], // Random user for demo
+                        content: postContent,
+                        media: reader.result,
+                        likes: 0,
+                        comments: []
+                    };
+                    posts.unshift(newPost); // Add new post to the beginning
+                    localStorage.setItem('posts', JSON.stringify(posts));
+                    document.getElementById('postContent').value = ''; // Clear the textarea
+                    document.getElementById('postMedia').value = ''; // Clear the file input
+                    renderPosts();
+                };
+            } else {
+                const newPost = {
+                    id: Date.now(),
+                    author: users[Math.floor(Math.random() * users.length)], // Random user for demo
+                    content: postContent,
+                    media: null,
+                    likes: 0,
+                    comments: []
+                };
+                posts.unshift(newPost); // Add new post to the beginning
+                localStorage.setItem('posts', JSON.stringify(posts));
+                document.getElementById('postContent').value = ''; // Clear the textarea
+                renderPosts();
+            }
+        }
+
+        // Function to render posts
+        function renderPosts() {
+            const postsSection = document.getElementById('postsSection');
+            postsSection.innerHTML = '';
+
+            posts.forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.innerHTML = `
+                    <div class="post-author">
+                        <img src="${post.author.avatar}" alt="${post.author.name}" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                        ${post.author.name}
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    ${post.media ? `
+                        <div class="post-media">
+                            ${post.media.startsWith('data:image') ? `
+                                <img src="${post.media}" alt="Post Image">
+                            ` : `
+                                <video controls>
+                                    <source src="${post.media}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            `}
+                        </div>
+                    ` : ''}
+                    <div class="post-actions">
+                        <button onclick="likePost(${post.id})">👍 ${post.likes}</button>
+                        <button onclick="commentOnPost(${post.id})">💬 Comment</button>
+                    </div>
+                `;
+                postsSection.appendChild(postCard);
+            });
+        }
+
+        // Function to like a post
+        function likePost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.likes++;
+                localStorage.setItem('posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        // Function to comment on a post
+        function commentOnPost(postId) {
+            const comment = prompt('Write your comment:');
+            if (comment) {
+                const post = posts.find(p => p.id === postId);
+                if (post) {
+                    post.comments.push(comment);
+                    localStorage.setItem('posts', JSON.stringify(posts));
+                    renderPosts();
+                }
+            }
+        }
+
+        // Initial render
+        renderPosts();
+    </script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart NPK Plant Advisor Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #FF9800;
+            --dark: #2E7D32;
+            --light: #F5F7FA;
+            --text: #333;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--dark);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 120px;
+            flex: 1;
+        }
+
+        .input-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .npk-input {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .npk-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            outline: none;
+        }
+
+        #generateBtn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex-grow: 1;
+            margin-top: 25px;
+            box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #generateBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(76, 175, 80, 0.3);
+            background: var(--primary-dark);
+        }
+
+        #generateBtn:active {
+            transform: translateY(1px);
+        }
+
+        .result-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .result-section.show {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 1000px;
+        }
+
+        .plants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .plant-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            animation: cardEntrance 0.6s ease-out;
+            border-top: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .plant-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .plant-card h3 {
+            margin: 0 0 10px 0;
+            color: var(--dark);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plant-card h3 .icon {
+            font-size: 1.5rem;
+        }
+
+        .plant-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .meta-item {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .meta-item i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .water-meter {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .water-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #64B5F6, #1976D2);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .plant-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .soil-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-around;
+        }
+
+        .soil-parameter {
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .soil-parameter .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .soil-parameter .label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 0.8rem;
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .input-section {
+                flex-direction: column;
+            }
+            
+            .npk-input, #generateBtn {
+                width: 100%;
+            }
+            
+            .plants-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .soil-summary {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .soil-parameter {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                text-align: left;
+            }
+        }
+
+        /* Animated background elements */
+        .bg-leaf {
+            position: fixed;
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .leaf-1 {
+            top: 10%;
+            left: 5%;
+            font-size: 100px;
+            animation-delay: 0s;
+        }
+
+        .leaf-2 {
+            bottom: 15%;
+            right: 5%;
+            font-size: 80px;
+            animation-delay: 2s;
+        }
+
+        .leaf-3 {
+            top: 40%;
+            right: 10%;
+            font-size: 120px;
+            animation-delay: 4s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="bg-leaf leaf-1">🌱</div>
+    <div class="bg-leaf leaf-2">🍃</div>
+    <div class="bg-leaf leaf-3">🌿</div>
+
+    <div class="container">
+        <h1>
+            <span style="display: inline-block; animation: bounce 2s infinite;">🌱</span>
+            Smart NPK Plant Advisor Pro
+            <span style="display: inline-block; animation: bounce 2s infinite 0.5s;">🌿</span>
+        </h1>
+
+        <p style="text-align: center; margin-bottom: 30px; color: #555;">
+            Get personalized plant recommendations based on your soil's NPK values, pH level, and moisture content
+        </p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="nValue">Nitrogen (N)</label>
+                <input type="number" id="nValue" class="npk-input" placeholder="mg/kg" min="0" max="200" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="pValue">Phosphorus (P)</label>
+                <input type="number" id="pValue" class="npk-input" placeholder="mg/kg" min="0" max="100" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="kValue">Potassium (K)</label>
+                <input type="number" id="kValue" class="npk-input" placeholder="mg/kg" min="0" max="300" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="phValue">pH Level</label>
+                <input type="number" id="phValue" class="npk-input" placeholder="0-14" min="0" max="14" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="moistureValue">Moisture</label>
+                <input type="number" id="moistureValue" class="npk-input" placeholder="%" min="0" max="100" step="1">
+            </div>
+            
+            <button id="generateBtn" onclick="generateResult()">
+                Analyze Soil & Get Recommendations
+            </button>
+        </div>
+
+        <div class="loader" id="loader"></div>
+
+        <div class="result-section" id="resultSection">
+            <div class="soil-summary" id="soilSummary">
+                <!-- Dynamically filled by JavaScript -->
+            </div>
+            
+            <h2 style="color: var(--dark); margin-bottom: 15px;">Recommended Plants</h2>
+            
+            <div class="plants-grid" id="plantList">
+                <!-- Plant cards will be inserted here -->
+            </div>
+            
+            <p class="timestamp">Last Updated: <span id="timestamp"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Plant Database with water requirements
+        const PLANT_DATABASE = [
+            {
+                name: "Tomato",
+                scientific: "Solanum lycopersicum",
+                icon: "🍅",
+                npk: { n: { min: 20, max: 50 }, p: { min: 15, max: 30 }, k: { min: 30, max: 60 } },
+                ph: { min: 5.5, max: 7.0 },
+                moisture: { min: 20, max: 80 },
+                waterRequirement: 1.5,
+                description: "Needs consistent moisture and full sun. Stake plants for better yield."
+            },
+            {
+                name: "Lettuce",
+                scientific: "Lactuca sativa",
+                icon: "🥬",
+                npk: { n: { min: 30, max: 60 }, p: { min: 10, max: 20 }, k: { min: 20, max: 40 } },
+                ph: { min: 6.0, max: 7.0 },
+                moisture: { min: 40, max: 90 },
+                waterRequirement: 1.0,
+                description: "Fast-growing, prefers cooler temperatures. Keep soil consistently moist."
+            },
+            {
+                name: "Blueberry",
+                scientific: "Vaccinium spp.",
+                icon: "🫐",
+                npk: { n: { min: 10, max: 20 }, p: { min: 5, max: 15 }, k: { min: 10, max: 20 } },
+                ph: { min: 4.0, max: 5.5 },
+                moisture: { min: 30, max: 70 },
+                waterRequirement: 1.2,
+                description: "Acid-loving plant. Mulch to maintain soil moisture and pH."
+            },
+            {
+                name: "Potato",
+                scientific: "Solanum tuberosum",
+                icon: "🥔",
+                npk: { n: { min: 30, max: 50 }, p: { min: 20, max: 30 }, k: { min: 40, max: 80 } },
+                ph: { min: 4.8, max: 6.5 },
+                moisture: { min: 30, max: 80 },
+                waterRequirement: 2.0,
+                description: "Needs loose, well-drained soil. Water deeply but infrequently."
+            },
+            {
+                name: "Lavender",
+                scientific: "Lavandula spp.",
+                icon: "🌿",
+                npk: { n: { min: 10, max: 20 }, p: { min: 5, max: 15 }, k: { min: 10, max: 20 } },
+                ph: { min: 6.5, max: 8.0 },
+                moisture: { min: 10, max: 40 },
+                waterRequirement: 0.5,
+                description: "Drought-tolerant once established. Prefers full sun and good drainage."
+            },
+            {
+                name: "Rice",
+                scientific: "Oryza sativa",
+                icon: "🌾",
+                npk: { n: { min: 40, max: 80 }, p: { min: 10, max: 20 }, k: { min: 30, max: 50 } },
+                ph: { min: 5.0, max: 6.5 },
+                moisture: { min: 80, max: 100 },
+                waterRequirement: 3.0,
+                description: "Requires flooded conditions for optimal growth. Tropical climate preferred."
+            },
+            {
+                name: "Strawberry",
+                scientific: "Fragaria × ananassa",
+                icon: "🍓",
+                npk: { n: { min: 20, max: 40 }, p: { min: 15, max: 30 }, k: { min: 25, max: 50 } },
+                ph: { min: 5.5, max: 6.5 },
+                moisture: { min: 30, max: 70 },
+                waterRequirement: 1.0,
+                description: "Prefers slightly acidic soil. Mulch to keep fruit clean and conserve moisture."
+            },
+            {
+                name: "Corn",
+                scientific: "Zea mays",
+                icon: "🌽",
+                npk: { n: { min: 40, max: 80 }, p: { min: 15, max: 30 }, k: { min: 30, max: 60 } },
+                ph: { min: 5.8, max: 7.0 },
+                moisture: { min: 30, max: 70 },
+                waterRequirement: 2.5,
+                description: "Heavy feeder. Plant in blocks for better pollination."
+            },
+            {
+                name: "Carrot",
+                scientific: "Daucus carota",
+                icon: "🥕",
+                npk: { n: { min: 20, max: 40 }, p: { min: 15, max: 25 }, k: { min: 30, max: 50 } },
+                ph: { min: 5.5, max: 7.0 },
+                moisture: { min: 30, max: 70 },
+                waterRequirement: 1.0,
+                description: "Needs loose, stone-free soil for straight roots. Consistent moisture is key."
+            },
+            {
+                name: "Cactus",
+                scientific: "Cactaceae",
+                icon: "🌵",
+                npk: { n: { min: 5, max: 15 }, p: { min: 5, max: 15 }, k: { min: 10, max: 20 } },
+                ph: { min: 6.0, max: 7.5 },
+                moisture: { min: 5, max: 20 },
+                waterRequirement: 0.2,
+                description: "Extremely drought-tolerant. Overwatering is the most common cause of death."
+            }
+        ];
+
+        // Function to calculate match score (0-100)
+        function calculateMatchScore(plant, n, p, k, ph, moisture) {
+            // NPK score (50% weight)
+            const nScore = 1 - Math.abs(n - (plant.npk.n.min + plant.npk.n.max)/2) / plant.npk.n.max;
+            const pScore = 1 - Math.abs(p - (plant.npk.p.min + plant.npk.p.max)/2) / plant.npk.p.max;
+            const kScore = 1 - Math.abs(k - (plant.npk.k.min + plant.npk.k.max)/2) / plant.npk.k.max;
+            const npkScore = (nScore + pScore + kScore) / 3 * 50;
+            
+            // pH score (20% weight)
+            const phMid = (plant.ph.min + plant.ph.max)/2;
+            const phScore = (1 - Math.min(Math.abs(ph - phMid) / 3.5, 1)) * 20;
+            
+            // Moisture score (20% weight)
+            const moistureMid = (plant.moisture.min + plant.moisture.max)/2;
+            const moistureScore = (1 - Math.min(Math.abs(moisture - moistureMid) / 50, 1)) * 20;
+            
+            // Water availability score (10% weight - plants that need less water score higher in dry conditions)
+            const waterScore = moisture >= plant.waterRequirement * 50 ? 10 : (moisture / (plant.waterRequirement * 50)) * 10;
+            
+            return Math.min(Math.round(npkScore + phScore + moistureScore + waterScore), 100);
+        }
+
+        // Get recommended plants based on soil parameters
+        function getRecommendedPlants(n, p, k, ph, moisture) {
+            return PLANT_DATABASE.map(plant => {
+                const score = calculateMatchScore(plant, n, p, k, ph, moisture);
+                return { ...plant, score };
+            })
+            .filter(plant => plant.score >= 50) // Only show plants with at least 50% match
+            .sort((a, b) => b.score - a.score); // Sort by best match first
+        }
+
+        // Generate and display results
+        function generateResult() {
+            // Get input values
+            const n = parseFloat(document.getElementById('nValue').value) || 0;
+            const p = parseFloat(document.getElementById('pValue').value) || 0;
+            const k = parseFloat(document.getElementById('kValue').value) || 0;
+            const ph = parseFloat(document.getElementById('phValue').value) || 7;
+            const moisture = parseFloat(document.getElementById('moistureValue').value) || 50;
+
+            // Update soil summary
+            document.getElementById('soilSummary').innerHTML = `
+                <div class="soil-parameter">
+                    <div class="value">${n.toFixed(1)}</div>
+                    <div class="label">Nitrogen (mg/kg)</div>
+                </div>
+                <div class="soil-parameter">
+                    <div class="value">${p.toFixed(1)}</div>
+                    <div class="label">Phosphorus (mg/kg)</div>
+                </div>
+                <div class="soil-parameter">
+                    <div class="value">${k.toFixed(1)}</div>
+                    <div class="label">Potassium (mg/kg)</div>
+                </div>
+                <div class="soil-parameter">
+                    <div class="value">${ph.toFixed(1)}</div>
+                    <div class="label">pH Level</div>
+                </div>
+                <div class="soil-parameter">
+                    <div class="value">${moisture.toFixed(0)}%</div>
+                    <div class="label">Soil Moisture</div>
+                </div>
+            `;
+
+            // Get recommendations
+            const plants = getRecommendedPlants(n, p, k, ph, moisture);
+            const plantList = document.getElementById('plantList');
+            
+            if (plants.length > 0) {
+                plantList.innerHTML = plants.map(plant => `
+                    <div class="plant-card" style="animation-delay: ${Math.random() * 0.5}s">
+                        <h3><span class="icon">${plant.icon}</span> ${plant.name} <small>(${plant.scientific})</small></h3>
+                        <div class="plant-meta">
+                            <span class="meta-item"><i>💧</i> ${plant.waterRequirement}L/day</span>
+                            <span class="meta-item"><i>📊</i> ${plant.score}% Match</span>
+                            <span class="meta-item"><i>⚖️</i> pH ${plant.ph.min}-${plant.ph.max}</span>
+                        </div>
+                        <div class="water-meter">
+                            <div class="water-fill" style="width: ${plant.waterRequirement / 3 * 100}%"></div>
+                        </div>
+                        <p>Water requirement: <strong>${plant.waterRequirement} liters/plant/day</strong></p>
+                        <p class="plant-description">${plant.description}</p>
+                    </div>
+                `).join('');
+            } else {
+                plantList.innerHTML = `
+                    <div class="no-results">
+                        <p>No plants found that match your soil conditions.</p>
+                        <p>Consider adjusting your soil parameters or looking for more adaptable plants.</p>
+                    </div>
+                `;
+            }
+
+            // Update timestamp
+            document.getElementById('timestamp').textContent = new Date().toLocaleString();
+            
+            // Show results section with animation
+            document.getElementById('resultSection').classList.add('show');
+        }
+
+        // Load sample data (for demo purposes)
+        function loadSampleData() {
+            document.getElementById('nValue').value = 35;
+            document.getElementById('pValue').value = 18;
+            document.getElementById('kValue').value = 42;
+            document.getElementById('phValue').value = 6.2;
+            document.getElementById('moistureValue').value = 65;
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSampleData();
+            
+            // Add animation to the generate button
+            const btn = document.getElementById('generateBtn');
+            btn.addEventListener('mouseover', () => {
+                btn.style.transform = 'translateY(-3px)';
+                btn.style.boxShadow = '0 8px 15px rgba(76, 175, 80, 0.3)';
+            });
+            
+            btn.addEventListener('mouseout', () => {
+                btn.style.transform = 'translateY(0)';
+                btn.style.boxShadow = '0 4px 6px rgba(76, 175, 80, 0.2)';
+            });
+            
+            // Add pulse animation to container
+            const container = document.querySelector('.container');
+            setInterval(() => {
+                container.style.boxShadow = '0 15px 40px rgba(76, 175, 80, 0.15)';
+                setTimeout(() => {
+                    container.style.boxShadow = '0 15px 40px rgba(0,0,0,0.12)';
+                }, 1000);
+            }, 5000);
+        });
+
+        // Bounce animation for the title icons
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes bounce {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-10px); }
+                }
+            </style>
+        `);
+    </script>
+</body>
+</html>

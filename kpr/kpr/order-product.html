@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Products</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    /* Banner Styles */
+    #banner {
+      background: linear-gradient(135deg, #ff6b6b, #ffa94d);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    #banner h2 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    #exitBanner {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #fff;
+      color: #ff6b6b;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    #exitBanner:hover {
+      background: #ff6b6b;
+      color: #fff;
+    }
+
+    /* Navigation Bar */
+    nav {
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    #cartIcon {
+      position: relative;
+      cursor: pointer;
+    }
+
+    #cartCount {
+      background: #ff6b6b;
+      color: #fff;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 0.8rem;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+    }
+
+    /* Product Grid */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+    }
+
+    .product img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .product h3 {
+      margin: 15px 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .product p {
+      margin: 5px 0;
+      color: #666;
+    }
+
+    .product button {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .product button:hover {
+      background: #218838;
+    }
+
+    /* Cart Modal */
+    #cartModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #cartContent {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    #cartContent h2 {
+      margin-top: 0;
+    }
+
+    #cartItems {
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    #closeCart {
+      background: #ff6b6b;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #closeCart:hover {
+      background: #ff4757;
+    }
+  </style>
+</head>
+<body>
+  <!-- Banner -->
+  <div id="banner">
+    <h2>🎉 All Products 50% OFF! 🎉</h2>
+    <button id="exitBanner">Exit</button>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <h1>Smart Farming Store</h1>
+    <div id="cartIcon">
+      🛒 <span id="cartCount">0</span>
+    </div>
+  </nav>
+
+  <!-- Product Grid -->
+  <div class="products">
+    <div class="product">
+      <img src="https://via.placeholder.com/150" alt="Smart Solar Irrigation">
+      <h3>Smart Solar Irrigation</h3>
+      <p>Offer Price: ₹500</p>
+      <p><del>MRP: ₹1000</del></p>
+      <button onclick="addToCart('Smart Solar Irrigation', 500)">Add to Cart</button>
+    </div>
+    <div class="product">
+      <img src="https://via.placeholder.com/150" alt="Ultrasonic Pest Repellent">
+      <h3>Ultrasonic Pest Repellent</h3>
+      <p>Offer Price: ₹300</p>
+      <p><del>MRP: ₹600</del></p>
+      <button onclick="addToCart('Ultrasonic Pest Repellent', 300)">Add to Cart</button>
+    </div>
+    <div class="product">
+      <img src="https://via.placeholder.com/150" alt="All in 1 Smart Farming Pole">
+      <h3>All in 1 Smart Farming Pole</h3>
+      <p>Offer Price: ₹1000</p>
+      <p><del>MRP: ₹2000</del></p>
+      <button onclick="addToCart('All in 1 Smart Farming Pole', 1000)">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cartModal">
+    <div id="cartContent">
+      <h2>Your Cart</h2>
+      <div id="cartItems"></div>
+      <button id="closeCart">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript for Functionality
+    let cart = [];
+    const cartCount = document.getElementById("cartCount");
+    const cartItems = document.getElementById("cartItems");
+    const cartModal = document.getElementById("cartModal");
+
+    // Exit Banner
+    document.getElementById("exitBanner").addEventListener("click", () => {
+      document.getElementById("banner").style.display = "none";
+    });
+
+    // Add to Cart
+    function addToCart(productName, price) {
+      cart.push({ productName, price });
+      updateCart();
+    }
+
+    // Update Cart
+    function updateCart() {
+      cartCount.textContent = cart.length;
+      cartItems.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <span>${item.productName}</span>
+          <span>₹${item.price}</span>
+        </div>
+      `).join("");
+    }
+
+    // Open Cart Modal
+    document.getElementById("cartIcon").addEventListener("click", () => {
+      cartModal.style.display = "flex";
+    });
+
+    // Close Cart Modal
+    document.getElementById("closeCart").addEventListener("click", () => {
+      cartModal.style.display = "none";
+    });
+  </script>
+</body>
+</html>

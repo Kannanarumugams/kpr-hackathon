@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            transform: translateY(0);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+        }
+
+        select {
+            appearance: none;
+            background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 1rem center/1em;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #48bb78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2);
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: #f6e05e;
+            border: none;
+            border-radius: 10px;
+            color: #2d3748;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confirm-btn:hover {
+            background: #48bb78;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .confirm-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .confirm-btn:hover::after {
+            animation: shine 1.5s;
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+            
+            select, input {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="locationForm">
+            <div class="form-group">
+                <label for="district">Select District</label>
+                <select id="district" required>
+                    <option value="">Choose your district</option>
+                    <option>SALEM</option>
+                    <option>MADURAI</option>
+                    <option>NAMAKKAL</option>
+                    <option>KARUR</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="village">Village Name</label>
+                <input type="text" id="village" placeholder="Enter your village name" required>
+            </div>
+            <button type="submit" class="confirm-btn">
+                <span class="button-text">Confirm Location</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('locationForm');
+            
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Get district and village values
+                const district = document.getElementById('district').value;
+                const village = document.getElementById('village').value;
+                
+                // Save to local storage
+                localStorage.setItem('district', district);
+                localStorage.setItem('village', village);
+                
+                // Show success animation
+                const button = document.querySelector('.confirm-btn');
+                button.style.backgroundColor = '#48bb78';
+                button.innerHTML = '✓ Location Saved!';
+                
+                // Redirect to the specified URL after a short delay
+                setTimeout(() => {
+                    window.location.href = 'main3.html';
+                }, 1000); // Redirect after 1 second
+            });
+        });
+    </script>
+</body>
+</html>

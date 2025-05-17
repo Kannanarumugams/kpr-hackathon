@@ -1,0 +1,326 @@
+[
+    {
+        "Vegetable": "Onion Big (\u0baa\u0bc6\u0bb0\u0bbf\u0baf \u0bb5\u0bc6\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bae\u0bcd)",
+        "Current Price": 23.0,
+        "Previous Min Price": 26.0,
+        "Price Increase": -3.0
+    },
+    {
+        "Vegetable": "Onion Small (\u0b9a\u0bbf\u0ba9\u0bcd\u0ba9 \u0bb5\u0bc6\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bae\u0bcd)",
+        "Current Price": 52.0,
+        "Previous Min Price": 60.0,
+        "Price Increase": -8.0
+    },
+    {
+        "Vegetable": "Tomato (\u0ba4\u0b95\u0bcd\u0b95\u0bbe\u0bb3\u0bbf)",
+        "Current Price": 18.0,
+        "Previous Min Price": 21.0,
+        "Price Increase": -3.0
+    },
+    {
+        "Vegetable": "Green Chilli (\u0baa\u0b9a\u0bcd\u0b9a\u0bc8 \u0bae\u0bbf\u0bb3\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 45.0,
+        "Previous Min Price": 52.0,
+        "Price Increase": -7.0
+    },
+    {
+        "Vegetable": "Beetroot (\u0baa\u0bc0\u0b9f\u0bcd\u0bb0\u0bc2\u0b9f\u0bcd)",
+        "Current Price": 31.0,
+        "Previous Min Price": 36.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Potato (\u0b89\u0bb0\u0bc1\u0bb3\u0bc8\u0b95\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1)",
+        "Current Price": 30.0,
+        "Previous Min Price": 35.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Raw Banana (Plantain) (\u0bb5\u0bbe\u0bb4\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 9.0,
+        "Previous Min Price": 10.0,
+        "Price Increase": -1.0
+    },
+    {
+        "Vegetable": "Amaranth Leaves (\u0b9a\u0bbf\u0bb1\u0bc1 \u0b95\u0bc0\u0bb0\u0bc8)",
+        "Current Price": 13.0,
+        "Previous Min Price": 15.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "Amla (\u0ba8\u0bc6\u0bb2\u0bcd\u0bb2\u0bbf\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 75.0,
+        "Previous Min Price": 86.0,
+        "Price Increase": -11.0
+    },
+    {
+        "Vegetable": "Ash gourd (\u0b9a\u0bbe\u0bae\u0bcd\u0baa\u0bb2\u0bcd \u0baa\u0bc2\u0b9a\u0ba3\u0bbf\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 23.0,
+        "Previous Min Price": 26.0,
+        "Price Increase": -3.0
+    },
+    {
+        "Vegetable": "Baby Corn (\u0b9a\u0bbf\u0bb1\u0bbf\u0baf \u0bae\u0b95\u0bcd\u0b95\u0bbe\u0b9a\u0bcd\u0b9a\u0bcb\u0bb3\u0bae\u0bcd)",
+        "Current Price": 49.0,
+        "Previous Min Price": 56.0,
+        "Price Increase": -7.0
+    },
+    {
+        "Vegetable": "Banana Flower (\u0bb5\u0bbe\u0bb4\u0bc8\u0baa\u0bcd\u0baa\u0bc2)",
+        "Current Price": 19.0,
+        "Previous Min Price": 22.0,
+        "Price Increase": -3.0
+    },
+    {
+        "Vegetable": "Capsicum (\u0b95\u0bc1\u0b9f\u0bc8\u0bae\u0bbf\u0bb3\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 45.0,
+        "Previous Min Price": 52.0,
+        "Price Increase": -7.0
+    },
+    {
+        "Vegetable": "Bitter Gourd (\u0baa\u0bbe\u0b95\u0bb1\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 40.0,
+        "Previous Min Price": 46.0,
+        "Price Increase": -6.0
+    },
+    {
+        "Vegetable": "Bottle Gourd (\u0b9a\u0bc1\u0bb0\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 29.0,
+        "Previous Min Price": 33.0,
+        "Price Increase": -4.0
+    },
+    {
+        "Vegetable": "Butter Beans (\u0baa\u0b9f\u0bcd\u0b9f\u0bb0\u0bcd \u0baa\u0bc0\u0ba9\u0bcd\u0bb8\u0bcd)",
+        "Current Price": 48.0,
+        "Previous Min Price": 55.0,
+        "Price Increase": -7.0
+    },
+    {
+        "Vegetable": "Broad Beans (\u0b85\u0bb5\u0bb0\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 34.0,
+        "Previous Min Price": 39.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Cabbage (\u0bae\u0bc1\u0b9f\u0bcd\u0b9f\u0bc8\u0b95\u0bcd\u0b95\u0bcb\u0bb8\u0bcd)",
+        "Current Price": 17.0,
+        "Previous Min Price": 20.0,
+        "Price Increase": -3.0
+    },
+    {
+        "Vegetable": "Carrot (\u0b95\u0bc7\u0bb0\u0b9f\u0bcd)",
+        "Current Price": 40.0,
+        "Previous Min Price": 46.0,
+        "Price Increase": -6.0
+    },
+    {
+        "Vegetable": "Cauliflower (\u0b95\u0bbe\u0bb2\u0bbf\u0b83\u0baa\u0bbf\u0bb3\u0bb5\u0bb0\u0bcd)",
+        "Current Price": 30.0,
+        "Previous Min Price": 35.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Cluster beans (\u0b95\u0bca\u0ba4\u0bcd\u0ba4\u0bb5\u0bb0\u0bc8)",
+        "Current Price": 45.0,
+        "Previous Min Price": 52.0,
+        "Price Increase": -7.0
+    },
+    {
+        "Vegetable": "Coconut (\u0ba4\u0bc7\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 69.0,
+        "Previous Min Price": 79.0,
+        "Price Increase": -10.0
+    },
+    {
+        "Vegetable": "Colocasia Leaves (\u0b9a\u0bc7\u0baa\u0bcd\u0baa\u0b99\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1 \u0b95\u0bc0\u0bb0\u0bc8)",
+        "Current Price": 15.0,
+        "Previous Min Price": 17.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "Colocasia (\u0b9a\u0bc7\u0baa\u0bcd\u0baa\u0b99\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1)",
+        "Current Price": 26.0,
+        "Previous Min Price": 30.0,
+        "Price Increase": -4.0
+    },
+    {
+        "Vegetable": "Coriander Leaves (\u0b95\u0bc6\u0bbe\u0ba4\u0bcd\u0ba4\u0bc1\u0bae\u0bb2\u0bcd\u0bb2\u0bbf)",
+        "Current Price": 15.0,
+        "Previous Min Price": 17.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "Corn (\u0bae\u0b95\u0bcd\u0b95\u0bbe\u0b9a\u0bcd\u0b9a\u0bcb\u0bb3\u0bae\u0bcd)",
+        "Current Price": 29.0,
+        "Previous Min Price": 33.0,
+        "Price Increase": -4.0
+    },
+    {
+        "Vegetable": "Cucumber (\u0bb5\u0bc6\u0bb3\u0bcd\u0bb3\u0bb0\u0bbf\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 23.0,
+        "Previous Min Price": 26.0,
+        "Price Increase": -3.0
+    },
+    {
+        "Vegetable": "Curry Leaves (\u0b95\u0bb1\u0bbf\u0bb5\u0bc7\u0baa\u0bcd\u0baa\u0bbf\u0bb2\u0bc8)",
+        "Current Price": 27.0,
+        "Previous Min Price": 31.0,
+        "Price Increase": -4.0
+    },
+    {
+        "Vegetable": "Dill Leaves (\u0bb5\u0bc6\u0ba8\u0bcd\u0ba4\u0baf\u0bae\u0bcd \u0b87\u0bb2\u0bc8\u0b95\u0bb3\u0bcd)",
+        "Current Price": 11.0,
+        "Previous Min Price": 13.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "Drumsticks (\u0bae\u0bc1\u0bb0\u0bc1\u0b99\u0bcd\u0b95\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 40.0,
+        "Previous Min Price": 46.0,
+        "Price Increase": -6.0
+    },
+    {
+        "Vegetable": "Brinjal (\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb0\u0bbf\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 33.0,
+        "Previous Min Price": 38.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Brinjal (Big) (\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb0\u0bbf\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 30.0,
+        "Previous Min Price": 35.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Elephant Yam (\u0b9a\u0bc7\u0ba9\u0bc8\u0b95\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1)",
+        "Current Price": 38.0,
+        "Previous Min Price": 44.0,
+        "Price Increase": -6.0
+    },
+    {
+        "Vegetable": "Fenugreek Leaves (\u0bb5\u0bc6\u0ba8\u0bcd\u0ba4\u0baf\u0b95\u0bcd\u0b95\u0bc0\u0bb0\u0bc8)",
+        "Current Price": 11.0,
+        "Previous Min Price": 13.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "French Beans (\u0baa\u0bc0\u0ba9\u0bcd\u0bb8\u0bcd)",
+        "Current Price": 52.0,
+        "Previous Min Price": 60.0,
+        "Price Increase": -8.0
+    },
+    {
+        "Vegetable": "Garlic (\u0baa\u0bc2\u0ba3\u0bcd\u0b9f\u0bc1)",
+        "Current Price": 93.0,
+        "Previous Min Price": 107.0,
+        "Price Increase": -14.0
+    },
+    {
+        "Vegetable": "Ginger (\u0b87\u0b9e\u0bcd\u0b9a\u0bbf)",
+        "Current Price": 60.0,
+        "Previous Min Price": 69.0,
+        "Price Increase": -9.0
+    },
+    {
+        "Vegetable": "Onion Green (\u0baa\u0b9a\u0bcd\u0b9a\u0bc8 \u0bb5\u0bc6\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bae\u0bcd)",
+        "Current Price": 37.0,
+        "Previous Min Price": 43.0,
+        "Price Increase": -6.0
+    },
+    {
+        "Vegetable": "Green Peas (\u0baa\u0b9a\u0bcd\u0b9a\u0bc8 \u0baa\u0b9f\u0bcd\u0b9f\u0bbe\u0ba3\u0bbf)",
+        "Current Price": 52.0,
+        "Previous Min Price": 60.0,
+        "Price Increase": -8.0
+    },
+    {
+        "Vegetable": "Ivy Gourd (\u0b95\u0bcb\u0bb5\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 32.0,
+        "Previous Min Price": 37.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Lemon (Lime) (\u0b8e\u0bb2\u0bc1\u0bae\u0bbf\u0b9a\u0bcd\u0b9a\u0bc8)",
+        "Current Price": 58.0,
+        "Previous Min Price": 67.0,
+        "Price Increase": -9.0
+    },
+    {
+        "Vegetable": "Mango Raw (\u0bae\u0bbe\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 41.0,
+        "Previous Min Price": 47.0,
+        "Price Increase": -6.0
+    },
+    {
+        "Vegetable": "Mint Leaves (\u0baa\u0bc1\u0ba4\u0bbf\u0ba9\u0bbe)",
+        "Current Price": 5.0,
+        "Previous Min Price": 6.0,
+        "Price Increase": -1.0
+    },
+    {
+        "Vegetable": "Mushroom (\u0b95\u0bbe\u0bb3\u0bbe\u0ba9\u0bcd)",
+        "Current Price": 89.0,
+        "Previous Min Price": 102.0,
+        "Price Increase": -13.0
+    },
+    {
+        "Vegetable": "Mustard Leaves (\u0b95\u0b9f\u0bc1\u0b95\u0bc1 \u0b87\u0bb2\u0bc8\u0b95\u0bb3\u0bcd)",
+        "Current Price": 12.0,
+        "Previous Min Price": 14.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "Ladies Finger (\u0bb5\u0bc6\u0ba3\u0bcd\u0b9f\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 35.0,
+        "Previous Min Price": 40.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Pumpkin (\u0baa\u0bc2\u0b9a\u0ba3\u0bbf)",
+        "Current Price": 21.0,
+        "Previous Min Price": 24.0,
+        "Price Increase": -3.0
+    },
+    {
+        "Vegetable": "Radish (\u0bae\u0bc1\u0bb3\u0bcd\u0bb3\u0b99\u0bcd\u0b95\u0bbf)",
+        "Current Price": 25.0,
+        "Previous Min Price": 29.0,
+        "Price Increase": -4.0
+    },
+    {
+        "Vegetable": "Ridge Gourd (\u0baa\u0bc0\u0bb0\u0bcd\u0b95\u0bcd\u0b95\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 34.0,
+        "Previous Min Price": 39.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Shallot (Pearl Onion) (\u0b9a\u0bbf\u0bb1\u0bbf\u0baf \u0bb5\u0bc6\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bae\u0bcd)",
+        "Current Price": 33.0,
+        "Previous Min Price": 38.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Snake Gourd (\u0baa\u0bc1\u0b9f\u0bb2\u0b99\u0bcd\u0b95\u0bbe\u0baf\u0bcd)",
+        "Current Price": 34.0,
+        "Previous Min Price": 39.0,
+        "Price Increase": -5.0
+    },
+    {
+        "Vegetable": "Sorrel Leaves (\u0baa\u0bc1\u0bb3\u0bbf\u0b9a\u0bcd\u0b9a \u0b95\u0bc0\u0bb0\u0bc8)",
+        "Current Price": 15.0,
+        "Previous Min Price": 17.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "Spinach (\u0b95\u0bc0\u0bb0\u0bc8)",
+        "Current Price": 10.0,
+        "Previous Min Price": 12.0,
+        "Price Increase": -2.0
+    },
+    {
+        "Vegetable": "Sweet Potato (\u0b87\u0ba9\u0bbf\u0baa\u0bcd\u0baa\u0bc1 \u0b89\u0bb0\u0bc1\u0bb3\u0bc8\u0b95\u0bcd\u0b95\u0bbf\u0bb4\u0b99\u0bcd\u0b95\u0bc1)",
+        "Current Price": 59.0,
+        "Previous Min Price": 68.0,
+        "Price Increase": -9.0
+    }
+]

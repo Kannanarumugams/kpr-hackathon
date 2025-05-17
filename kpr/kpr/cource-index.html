@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>seed-to-circuit online course for farming</title>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #FFC107;
+            --light: #F1F8E9;
+            --dark: #2E7D32;
+            --text: #212121;
+            --text-light: #757575;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 Q50,80 0,100 Z"></path></svg>');
+            background-size: cover;
+            background-position: bottom;
+            opacity: 0.5;
+        }
+
+        .header-content {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 32px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--text-light);
+            animation: fadeIn 1.5s ease;
+        }
+
+        .levels {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .level-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .level-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .level-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .level-content {
+            padding: 25px;
+        }
+
+        .level-icon {
+            font-size: 50px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .level-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: var(--primary-dark);
+        }
+
+        .level-card p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .course-page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .course-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .course-header h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .course-header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            margin-bottom: 40px;
+        }
+
+        .video-info h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+
+        .video-info p {
+            color: var(--text-light);
+        }
+
+        .progress-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .navigation-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #bdbdbd;
+        }
+
+        .course-complete {
+            text-align: center;
+            padding: 50px 20px;
+            display: none;
+        }
+
+        .course-complete i {
+            font-size: 80px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        .course-complete h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+
+        .course-complete p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 20px;
+            }
+
+            nav ul li {
+                margin: 0 10px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .levels {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .level-card {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>seed-to-circuit online course for farming</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="home-link">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Level Selection Page -->
+        <section id="level-selection" class="hero">
+            <h1>Farmer's Learning Platform</h1>
+            <p>Enhance your farming skills with our comprehensive courses tailored for farmers at all experience levels. Select your level to begin learning.</p>
+            
+            <div class="levels">
+                <div class="level-card" data-level="beginner">
+                    <div class="level-content">
+                        <div class="level-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>Beginner</h3>
+                        <p>Learn basic farming techniques and labor training. Perfect for new farmers or those looking to refresh fundamentals.</p>
+                        <button class="btn">Start Learning</button>
+                    </div>
+                </div>
+                
+                <div class="level-card" data-level="moderate">
+                    <div class="level-content">
+                        <div class="level-icon">
+                            <i class="fas fa-tractor"></i>
+                        </div>
+                        <h3>Moderate</h3>
+                        <p>Large scale farming techniques for experienced farmers looking to expand their operations.</p>
+                        <button class="btn">Start Learning</button>
+                    </div>
+                </div>
+                
+                <div class="level-card" data-level="advanced">
+                    <div class="level-content">
+                        <div class="level-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Advanced</h3>
+                        <p>Modern farming equipment and advanced techniques for maximizing productivity.</p>
+                        <button class="btn">Start Learning</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Pages -->
+        <!-- Beginner Course -->
+        <section id="beginner-course" class="course-page">
+            <div class="course-header">
+                <h2>Beginner Farming Course</h2>
+                <p>Master the fundamentals of farming with these 5 essential lessons</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="beginner-progress"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Progress</span>
+                    <span id="beginner-progress-text">0/5 completed</span>
+                </div>
+            </div>
+
+            <div id="beginner-video-1" class="video-lesson">
+                <div class="video-container">
+                    <iframe id="beginner-iframe-1" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 1: Soil Preparation Basics</h3>
+                    <p>Learn how to properly prepare your soil for planting, including testing, tilling, and nutrient management.</p>
+                </div>
+            </div>
+
+            <div id="beginner-video-2" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="beginner-iframe-2" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 2: Seed Selection and Planting</h3>
+                    <p>Understand how to choose the right seeds and the proper techniques for planting them.</p>
+                </div>
+            </div>
+
+            <div id="beginner-video-3" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="beginner-iframe-3" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 3: Irrigation Methods</h3>
+                    <p>Discover different irrigation techniques and how to choose the right one for your crops.</p>
+                </div>
+            </div>
+
+            <div id="beginner-video-4" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="beginner-iframe-4" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 4: Pest Control Fundamentals</h3>
+                    <p>Learn about common pests and organic methods to protect your crops.</p>
+                </div>
+            </div>
+
+            <div id="beginner-video-5" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="beginner-iframe-5" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 5: Harvesting Basics</h3>
+                    <p>Master the techniques for harvesting your crops at the right time and preserving quality.</p>
+                </div>
+            </div>
+
+            <div class="navigation-btns">
+                <button id="beginner-prev-btn" class="btn btn-secondary hidden">Previous Lesson</button>
+                <button id="beginner-next-btn" class="btn">Next Lesson</button>
+            </div>
+
+            <div id="beginner-complete" class="course-complete">
+                <i class="fas fa-trophy"></i>
+                <h2>Course Completed!</h2>
+                <p>Congratulations on completing the Beginner Farming Course. You've taken the first step toward mastering agricultural techniques.</p>
+                <button id="beginner-back-btn" class="btn">Return to Courses</button>
+            </div>
+        </section>
+
+        <!-- Moderate Course -->
+        <section id="moderate-course" class="course-page">
+            <div class="course-header">
+                <h2>Moderate Farming Course</h2>
+                <p>Scale up your farming operations with these 5 comprehensive lessons</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="moderate-progress"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Progress</span>
+                    <span id="moderate-progress-text">0/5 completed</span>
+                </div>
+            </div>
+
+            <div id="moderate-video-1" class="video-lesson">
+                <div class="video-container">
+                    <iframe id="moderate-iframe-1" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 1: Large Scale Soil Management</h3>
+                    <p>Advanced techniques for managing soil health across large farming operations.</p>
+                </div>
+            </div>
+
+            <div id="moderate-video-2" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="moderate-iframe-2" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 2: Crop Rotation Strategies</h3>
+                    <p>Learn systematic approaches to crop rotation for improved yield and soil health.</p>
+                </div>
+            </div>
+
+            <div id="moderate-video-3" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="moderate-iframe-3" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 3: Efficient Water Management</h3>
+                    <p>Techniques for optimizing water usage across large fields.</p>
+                </div>
+            </div>
+
+            <div id="moderate-video-4" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="moderate-iframe-4" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 4: Labor Management</h3>
+                    <p>Strategies for organizing and managing farm labor efficiently.</p>
+                </div>
+            </div>
+
+            <div id="moderate-video-5" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="moderate-iframe-5" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 5: Scaling Production</h3>
+                    <p>Methods for systematically increasing your farm's output while maintaining quality.</p>
+                </div>
+            </div>
+
+            <div class="navigation-btns">
+                <button id="moderate-prev-btn" class="btn btn-secondary hidden">Previous Lesson</button>
+                <button id="moderate-next-btn" class="btn">Next Lesson</button>
+            </div>
+
+            <div id="moderate-complete" class="course-complete">
+                <i class="fas fa-trophy"></i>
+                <h2>Course Completed!</h2>
+                <p>Congratulations on completing the Moderate Farming Course. You're now equipped with knowledge to scale your farming operations.</p>
+                <button id="moderate-back-btn" class="btn">Return to Courses</button>
+            </div>
+        </section>
+
+        <!-- Advanced Course -->
+        <section id="advanced-course" class="course-page">
+            <div class="course-header">
+                <h2>Advanced Farming Course</h2>
+                <p>Modern farming technologies and techniques in 5 in-depth lessons</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="advanced-progress"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Progress</span>
+                    <span id="advanced-progress-text">0/5 completed</span>
+                </div>
+            </div>
+
+            <div id="advanced-video-1" class="video-lesson">
+                <div class="video-container">
+                    <iframe id="advanced-iframe-1" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 1: Modern Farm Equipment</h3>
+                    <p>Overview of the latest farming machinery and how to operate them efficiently.</p>
+                </div>
+            </div>
+
+            <div id="advanced-video-2" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="advanced-iframe-2" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 2: Precision Agriculture</h3>
+                    <p>Using GPS and data analytics to optimize field-level management.</p>
+                </div>
+            </div>
+
+            <div id="advanced-video-3" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="advanced-iframe-3" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 3: Automated Irrigation Systems</h3>
+                    <p>Implementing smart irrigation technologies for water conservation.</p>
+                </div>
+            </div>
+
+            <div id="advanced-video-4" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="advanced-iframe-4" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 4: Drone Technology in Farming</h3>
+                    <p>Applications of drones for crop monitoring, spraying, and mapping.</p>
+                </div>
+            </div>
+
+            <div id="advanced-video-5" class="video-lesson hidden">
+                <div class="video-container">
+                    <iframe id="advanced-iframe-5" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Lesson 5: Farm Management Software</h3>
+                    <p>Digital tools for planning, monitoring, and analyzing farm operations.</p>
+                </div>
+            </div>
+
+            <div class="navigation-btns">
+                <button id="advanced-prev-btn" class="btn btn-secondary hidden">Previous Lesson</button>
+                <button id="advanced-next-btn" class="btn">Next Lesson</button>
+            </div>
+
+            <div id="advanced-complete" class="course-complete">
+                <i class="fas fa-trophy"></i>
+                <h2>Course Completed!</h2>
+                <p>Congratulations on completing the Advanced Farming Course. You're now at the forefront of modern agricultural technology.</p>
+                <button id="advanced-back-btn" class="btn">Return to Courses</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 seed-to-circuit online course for farming. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // YouTube video IDs - Replace these with your actual YouTube embed IDs
+        const beginnerVideos = [
+           'wyjs00xlAOM',
+  'qku3ilr_CG0',
+  'OTAesvb_2VE',
+  'C7tIACCpV8w',
+  'QfYOBULprcw'
+        ];
+
+        const moderateVideos = [
+          'wyjs00xlAOM',
+  'qku3ilr_CG0',
+  'OTAesvb_2VE',
+  'C7tIACCpV8w',
+  'QfYOBULprcw'
+        ];
+
+        const advancedVideos = [
+  'wyjs00xlAOM',
+  'qku3ilr_CG0',
+  'OTAesvb_2VE',
+  'C7tIACCpV8w',
+  'QfYOBULprcw'
+];
+
+
+
+        // DOM Elements
+        const levelSelection = document.getElementById('level-selection');
+        const beginnerCourse = document.getElementById('beginner-course');
+        const moderateCourse = document.getElementById('moderate-course');
+        const advancedCourse = document.getElementById('advanced-course');
+        const homeLink = document.getElementById('home-link');
+
+        // Level cards
+        const levelCards = document.querySelectorAll('.level-card');
+
+        // Course state tracking
+        const courseState = {
+            beginner: { currentLesson: 1 },
+            moderate: { currentLesson: 1 },
+            advanced: { currentLesson: 1 }
+        };
+
+        
+
+        // Initialize courses
+        function initCourses() {
+            // Set up beginner course videos
+            for (let i = 0; i < beginnerVideos.length; i++) {
+                const iframe = document.getElementById(`beginner-iframe-${i+1}`);
+                iframe.src = `https://www.youtube.com/embed/${beginnerVideos[i]}?enablejsapi=1`;
+            }
+
+            // Set up moderate course videos
+            for (let i = 0; i < moderateVideos.length; i++) {
+                const iframe = document.getElementById(`moderate-iframe-${i+1}`);
+                iframe.src = `https://www.youtube.com/embed/${moderateVideos[i]}?enablejsapi=1`;
+            }
+
+            // Set up advanced course videos
+            for (let i = 0; i < advancedVideos.length; i++) {
+                const iframe = document.getElementById(`advanced-iframe-${i+1}`);
+                iframe.src = `https://www.youtube.com/embed/${advancedVideos[i]}?enablejsapi=1`;
+            }
+        }
+
+        // Show level selection page
+        function showLevelSelection() {
+            levelSelection.style.display = 'block';
+            beginnerCourse.style.display = 'none';
+            moderateCourse.style.display = 'none';
+            advancedCourse.style.display = 'none';
+        }
+
+        // Show course page
+        function showCourse(level) {
+            levelSelection.style.display = 'none';
+            
+            if (level === 'beginner') {
+                beginnerCourse.style.display = 'block';
+                moderateCourse.style.display = 'none';
+                advancedCourse.style.display = 'none';
+                resetCourseProgress('beginner');
+            } else if (level === 'moderate') {
+                beginnerCourse.style.display = 'none';
+                moderateCourse.style.display = 'block';
+                advancedCourse.style.display = 'none';
+                resetCourseProgress('moderate');
+            } else if (level === 'advanced') {
+                beginnerCourse.style.display = 'none';
+                moderateCourse.style.display = 'none';
+                advancedCourse.style.display = 'block';
+                resetCourseProgress('advanced');
+            }
+        }
+
+        // Reset course progress when starting
+        function resetCourseProgress(level) {
+            courseState[level].currentLesson = 1;
+            
+            const lessons = document.querySelectorAll(`#${level}-course .video-lesson`);
+            lessons.forEach((lesson, index) => {
+                if (index === 0) {
+                    lesson.classList.remove('hidden');
+                } else {
+                    lesson.classList.add('hidden');
+                }
+            });
+
+            document.getElementById(`${level}-progress`).style.width = '0%';
+            document.getElementById(`${level}-progress-text`).textContent = '0/5 completed';
+            
+            const prevBtn = document.getElementById(`${level}-prev-btn`);
+            const nextBtn = document.getElementById(`${level}-next-btn`);
+            
+            prevBtn.classList.add('hidden');
+            nextBtn.textContent = 'Next Lesson';
+            
+            document.getElementById(`${level}-complete`).style.display = 'none';
+        }
+
+        // Navigation for courses
+        function setupCourseNavigation(level) {
+            const prevBtn = document.getElementById(`${level}-prev-btn`);
+            const nextBtn = document.getElementById(`${level}-next-btn`);
+            const completeSection = document.getElementById(`${level}-complete`);
+            const backBtn = document.getElementById(`${level}-back-btn`);
+            
+            prevBtn.addEventListener('click', () => {
+                if (courseState[level].currentLesson > 1) {
+                    document.getElementById(`${level}-video-${courseState[level].currentLesson}`).classList.add('hidden');
+                    courseState[level].currentLesson--;
+                    document.getElementById(`${level}-video-${courseState[level].currentLesson}`).classList.remove('hidden');
+                    
+                    if (courseState[level].currentLesson === 1) {
+                        prevBtn.classList.add('hidden');
+                    }
+                    
+                    nextBtn.textContent = 'Next Lesson';
+                    updateProgress(level, courseState[level].currentLesson - 1);
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (courseState[level].currentLesson < 5) {
+                    document.getElementById(`${level}-video-${courseState[level].currentLesson}`).classList.add('hidden');
+                    courseState[level].currentLesson++;
+                    document.getElementById(`${level}-video-${courseState[level].currentLesson}`).classList.remove('hidden');
+                    
+                    prevBtn.classList.remove('hidden');
+                    
+                    if (courseState[level].currentLesson === 5) {
+                        nextBtn.textContent = 'Complete Course';
+                    }
+                    
+                    updateProgress(level, courseState[level].currentLesson - 1);
+                } else {
+                    // Course completed
+                    document.getElementById(`${level}-video-${courseState[level].currentLesson}`).classList.add('hidden');
+                    completeSection.style.display = 'block';
+                    updateProgress(level, courseState[level].currentLesson);
+                    
+                    // Here you would typically send completion data to your backend
+                    console.log(`${level} course completed`);
+                }
+            });
+            
+            backBtn.addEventListener('click', () => {
+                showLevelSelection();
+            });
+        }
+
+        // Update progress bar and text
+        function updateProgress(level, completedLessons) {
+            const progress = (completedLessons / 5) * 100;
+            document.getElementById(`${level}-progress`).style.width = `${progress}%`;
+            document.getElementById(`${level}-progress-text`).textContent = `${completedLessons}/5 completed`;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initCourses();
+            
+            // Level card clicks
+            levelCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const level = card.getAttribute('data-level');
+                    showCourse(level);
+                });
+            });
+            
+            // Home link
+            homeLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showLevelSelection();
+            });
+            
+            // Setup course navigation
+            setupCourseNavigation('beginner');
+            setupCourseNavigation('moderate');
+            setupCourseNavigation('advanced');
+        });
+
+        // YouTube API - This would need to be properly implemented for tracking video completion
+        let players = [];
+        function onYouTubeIframeAPIReady() {
+            // This function would initialize YouTube players and set up event listeners
+            // For tracking when videos are actually watched
+        }
+    </script>
+</body>
+</html>

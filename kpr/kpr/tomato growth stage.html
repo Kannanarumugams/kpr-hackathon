@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomato Growth Monitor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .plant-visualization {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(180deg, #f0f9eb 0%, #e1f3d8 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #im{
+            margin-top:50px;
+            margin-right: 20px;
+            width: 400px;
+            height:400px;
+          
+        }
+        .plant-image {
+            width:100%;
+            height: auto;
+            max-height: 90%;
+       border-radius: 60px;
+        }
+
+        .plant-stats {
+            padding: 1rem;
+        }
+
+        .status-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            margin-bottom:250px ;
+        }
+
+        .days-counter {
+            background: #2c5f2d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2c5f2d;
+            width: 65%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .npk-indicators {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .npk-pill {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .nitrogen { background: #f0b429; }
+        .phosphorus { background: #48bb78; }
+        .potassium { background: #4299e1; }
+
+        .report-button {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid #2c5f2d;
+            color: #2c5f2d;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .plant-visualization {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="plant-visualization">
+            <div class="status-header">
+                <h1>Tomato Plant Monitor</h1>
+                <div class="days-counter">🌱 Day 22</div>
+            </div>
+            <!-- Static Tomato Plant Image -->
+            <div id="im">  <img src="TOMATO.jpg" class="plant-image" alt="Tomato Plant"></div>
+        </div>
+
+        <div class="plant-stats">
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Growth Progress</span>
+                    <span>65%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <div class="estimated-days">Estimated harvest in 18-24 days</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>PLANT HEALTH</h3>
+                    <div class="progress-bar" style="height: 8px; margin: 10px 0;">
+                        <div class="progress-fill" style="width: 85%; background: #48bb78;"></div>
+                    </div>
+                    <div class="health-status">Optimal</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>SOIL NUTRITION</h3>
+                    <div class="npk-indicators">
+                        <div class="npk-pill nitrogen">N: 24%</div>
+                        <div class="npk-pill phosphorus">P: 18%</div>
+                        <div class="npk-pill potassium">K: 22%</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="report-button">Generate Growth Report</button>
+        </div>
+    </div>
+</body>
+</html>

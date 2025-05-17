@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Manager Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Your existing CSS styles here */
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --text: #34495e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .field-box {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1/1;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            animation: fadeIn 0.3s ease-out;
+            text-decoration: none;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .field-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.1);
+            border-color: var(--primary);
+        }
+
+        .field-number {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .field-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s ease;
+            font-size: 0.7rem;
+        }
+
+        .field-box:hover .remove-btn {
+            opacity: 1;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+        }
+
+        .removing {
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .fields-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Field Manager</h1>
+            <button class="add-btn" id="addFieldBtn">
+                <i class="fas fa-plus"></i>
+                Add Field
+            </button>
+        </div>
+
+        <div class="fields-grid" id="fieldsContainer"></div>
+    </div>
+
+    <script>
+        // Initialize fields from localStorage or create empty array
+        let fields = JSON.parse(localStorage.getItem('fields')) || [];
+        let fieldCount = fields.length > 0 ? Math.max(...fields.map(f => f.id)) : 0;
+        const fieldsContainer = document.getElementById('fieldsContainer');
+        const addFieldBtn = document.getElementById('addFieldBtn');
+
+        // Load existing fields on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fields.forEach(field => {
+                createFieldBox(field.id, field.name);
+            });
+        });
+
+        // Add new field
+        addFieldBtn.addEventListener('click', () => {
+            fieldCount++;
+            const fieldName = `Field ${fieldCount}`;
+            fields.push({ id: fieldCount, name: fieldName });
+            saveFields();
+            createFieldBox(fieldCount, fieldName);
+        });
+
+        // Create field box element
+        function createFieldBox(id, name) {
+            const fieldBox = document.createElement('div');
+            fieldBox.className = 'field-box';
+            fieldBox.setAttribute('data-field', id);
+            fieldBox.innerHTML = `
+                <button class="remove-btn" onclick="removeField(event, this, ${id})">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="field-number">${name}</div>
+                <div class="field-label">Click to view</div>
+            `;
+
+            fieldBox.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-btn')) return;
+                
+                // Store the clicked field in localStorage
+                localStorage.setItem('selectedField', id);
+                console.log("✅ Field clicked:", id);
+                
+                // Navigate to field page
+                window.location.href = `field${id}.html`;
+            });
+
+            fieldsContainer.appendChild(fieldBox);
+        }
+
+        // Remove field
+        function removeField(event, btn, id) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const fieldBox = btn.closest('.field-box');
+            fieldBox.classList.add('removing');
+            
+            setTimeout(() => {
+                fieldBox.remove();
+                // Remove from fields array
+                fields = fields.filter(field => field.id !== id);
+                saveFields();
+            }, 300);
+        }
+
+        // Save fields to localStorage
+        function saveFields() {
+            localStorage.setItem('fields', JSON.stringify(fields));
+        }
+    </script>
+</body>
+</html>
